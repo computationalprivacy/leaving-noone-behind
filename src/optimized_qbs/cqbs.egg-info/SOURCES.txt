@@ -1,0 +1,15 @@
+Makefile
+__init__.py
+cqbsmodule.c
+qbs.c
+qbs.h
+qbs.o
+qbs.py
+setup.py
+test.c
+__pycache__/__init__.cpython-39.pyc
+__pycache__/qbs.cpython-39.pyc
+cqbs.egg-info/PKG-INFO
+cqbs.egg-info/SOURCES.txt
+cqbs.egg-info/dependency_links.txt
+cqbs.egg-info/top_level.txt
