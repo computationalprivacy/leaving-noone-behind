@@ -2,7 +2,12 @@ import argparse
 import os
 import sys
 import warnings
+import aiofiles
+import pickle
 
+async def save_metrics_to_file(file_path, data):
+    async with aiofiles.open(file_path, 'wb') as f:
+        await f.write(pickle.dumps(data))
 
 def str2bool(s):
     # This is for boolean type in the parser

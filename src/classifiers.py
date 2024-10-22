@@ -240,6 +240,23 @@ def fit_classifier(X_train: pd.DataFrame, y_train: pd.DataFrame, model: str, cv=
 
     return clf            
 
+def fit_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, cv=False):
+    trained_models = []
+    
+    for model in models:
+        print(f'Model: {model}')
+        if model=='logistic_regression':
+            clf=train_LogisticRegression(X_train, y_train, cv)
+            
+        elif model=='random_forest':
+            clf = train_RandomForest(X_train, y_train, cv)
+        elif model == 'mlp':
+            clf = train_MLP(X_train, y_train, cv)
+            
+        trained_models.append(clf)
+        
+        return trained_models
+
 def fit_validate_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, X_test: pd.DataFrame,
                              y_test: pd.DataFrame, models: list, cv: bool = False) -> tuple:
     """
