@@ -17,50 +17,57 @@ from src.shadow_data import generate_datasets
 from src.utils import ignore_depreciation
 
 
-"""
-    Train and evaluate a membership inference attack (MIA) using shadow datasets and target record.
-
-    Args:
-        df_aux: pd.DataFrame
-            Auxiliary dataset used for generating shadow datasets.
-        df_target: pd.DataFrame
-            Dataset containing the target record for MIA.
-        meta_data: list
-            Metadata information used for feature extraction and generating synthetic datasets.
-        target_record_id: int
-            The ID of the target record for MIA.
-        df_eval: pd.DataFrame
-            Evaluation dataset used for testing the trained models.
-        generator_name: str
-            Name of the data generator used for generating synthetic datasets.
-        continuous_cols: list
-            A list of column names representing continuous features.
-        categorical_cols: list
-            A list of column names representing categorical features.
-        n_original: int, optional
-            Number of original records to use for generating shadow datasets (default is 1000).
-        n_synth: int, optional
-            Number of synthetic records to generate for each shadow dataset (default is 1000).
-        n_datasets: int, optional
-            Number of shadow datasets to generate (default is 1000).
-        seeds_train: list, optional
-            List of seeds used for training dataset generation (default is None).
-        seeds_eval: list, optional
-            List of seeds used for evaluation dataset generation (default is None).
-        epsilon: float, optional
-            Differential privacy parameter for synthetic dataset generation (default is 0.0).
-        models: list, optional
-            A list of model names to use for training the meta-classifier (default is ['random_forest']).
-        cv: bool, optional
-            Whether to use cross-validation during model training (default is False).
-        output_path: str, optional
-            Path to save output files (default is './output/files/').
-
-    Returns:
-        tuple: A tuple containing:
-            - target_record_id (int): The ID of the target record used for MIA.
-            - model_metrics (dict): A dictionary containing AUC and accuracy metrics for each trained model.
+def mia(path_to_data: str, path_to_metadata: str, path_to_data_split: str, target_records: list, generator_name: str,
+        n_original: int = None, n_synth: int = None, n_datasets: int = 1000, epsilon: float = 0.0, output_path: str = './output/files/'):
     """
+    Membership Inference Attack (MIA) function to evaluate data privacy risks.
+
+    Parameters
+    -----------
+    path_to_data: str
+        Path to the data file.
+    path_to_metadata: str
+        Path to the metadata file.
+    path_to_data_split: str
+        Path to the data split information.
+    target_records: list
+        List of target records for MIA.
+    generator_name: str
+        Name of the data generator being used.
+    n_original: int
+        Number of original records to use for training. Defaults to the size of df_target if not provided.
+    n_synth: int
+        Number of synthetic records to use. Defaults to the size of df_target if not provided.
+    n_datasets: int
+        Number of datasets to generate. Defaults to 1000.
+    epsilon: float
+        Differential privacy parameter. Defaults to 0.0.
+    output_path: str
+        Path to store output files. Defaults to './output/files/'.
+
+    Returns
+    -------
+    dict: A dictionary containing the MIA results for each target record.
+    """
+
+    df, categorical_cols, continuous_cols, meta_data = load_data(path_to_data, path_to_metadata)
+    df_aux, df_eval, df_target = split_data(df, path_to_data_split)
+
+    if n_original is None:
+        n_original = len(df_target)
+    if n_synth is None:
+        n_synth = len(df_target)
+
+    mia_results = dict()
+
+    for tr in tqdm(target_records):
+        mia_result = train_evaluate_mia(df_aux=df_aux, df_target=df_target, meta_data=meta_data, target_record_id=tr, df_eval=df_eval,
+                            generator_name=generator_name, continuous_cols=continuous_cols, categorical_cols=categorical_cols, n_original=n_original,
+                             n_synth=n_synth, n_datasets=n_datasets, epsilon=epsilon,
+                             models = ['random_forest'], output_path = './output/files/')
+        mia_results[tr] = mia_result
+
+    return mia_results
 
 def train_evaluate_mia(df_aux:pd.DataFrame, df_target: pd.DataFrame, meta_data: list, target_record_id: int, df_eval: pd.DataFrame,
                             generator_name: str, continuous_cols: list, categorical_cols: list, n_original: int = 1000,
