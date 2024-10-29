@@ -1,10 +1,5 @@
-import asyncio
-import concurrent.futures
-import os
 import pickle
 
-import aiofiles
-import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, roc_auc_score
 from tqdm import tqdm
@@ -18,7 +13,7 @@ from src.utils import ignore_depreciation
 
 
 def mia(path_to_data: str, path_to_metadata: str, path_to_data_split: str, target_records: list, generator_name: str,
-        n_original: int = None, n_synth: int = None, n_datasets: int = 1000, epsilon: float = 0.0, output_path: str = './output/files/'):
+        n_synth: int = None, n_datasets: int = 1000, epsilon: float = 0.0, models: list=['random_forest', 'logistic_regression'], output_path: str = './output/files/'):
     """
     Membership Inference Attack (MIA) function to evaluate data privacy risks.
 
@@ -53,26 +48,26 @@ def mia(path_to_data: str, path_to_metadata: str, path_to_data_split: str, targe
     df, categorical_cols, continuous_cols, meta_data = load_data(path_to_data, path_to_metadata)
     df_aux, df_eval, df_target = split_data(df, path_to_data_split)
 
-    if n_original is None:
-        n_original = len(df_target)
     if n_synth is None:
         n_synth = len(df_target)
 
-    mia_results = dict()
+    mia_results = []
 
     for tr in tqdm(target_records):
         mia_result = train_evaluate_mia(df_aux=df_aux, df_target=df_target, meta_data=meta_data, target_record_id=tr, df_eval=df_eval,
-                            generator_name=generator_name, continuous_cols=continuous_cols, categorical_cols=categorical_cols, n_original=n_original,
+                            generator_name=generator_name, continuous_cols=continuous_cols, categorical_cols=categorical_cols,
                              n_synth=n_synth, n_datasets=n_datasets, epsilon=epsilon,
-                             models = ['random_forest'], output_path = './output/files/')
-        mia_results[tr] = mia_result
+                             models = models)
+        mia_results.append(mia_result)
 
+    with open(output_path+'mia_results.pickle', 'wb') as f:
+        pickle.dump(mia_results, f)
     return mia_results
 
 def train_evaluate_mia(df_aux:pd.DataFrame, df_target: pd.DataFrame, meta_data: list, target_record_id: int, df_eval: pd.DataFrame,
-                            generator_name: str, continuous_cols: list, categorical_cols: list, n_original: int = 1000,
+                            generator_name: str, continuous_cols: list, categorical_cols: list,
                              n_synth: int = 1000, n_datasets: int = 1000, seeds_train: list = None, seeds_eval: list = None, epsilon: float = 0.0,
-                             models: list = ['random_forest'], cv: bool = False, output_path: str = './output/files/'):
+                             models: list = None, cv: bool = False):
     """
     Train and evaluate a membership inference attack (MIA) using shadow datasets and target record.
 
@@ -123,9 +118,9 @@ def train_evaluate_mia(df_aux:pd.DataFrame, df_target: pd.DataFrame, meta_data: 
     target_record = df_target.loc[[target_record_id]]
     print('Generating shadow datasets...')
     datasets_and_labels = generate_datasets(df_aux=df_aux, df_target=df_target, meta_data=meta_data,
-                                                                                           target_record_id=target_record_id, df_eval=df_eval,
-                                                                                           generator_name=generator_name, n_synth=n_synth, n_datasets=n_datasets,
-                                                                                           seeds_train=seeds_train, seeds_eval=seeds_eval, epsilon=epsilon) 
+                                            target_record_id=target_record_id, df_eval=df_eval,
+                                            generator_name=generator_name, n_synth=n_synth, n_datasets=n_datasets,
+                                            seeds_train=seeds_train, seeds_eval=seeds_eval, epsilon=epsilon) 
     datasets_train = [d for d in datasets_and_labels if d[2] is True]
     datasets_eval = [d for d in datasets_and_labels if d[2] is False]
     
@@ -152,6 +147,7 @@ def train_evaluate_mia(df_aux:pd.DataFrame, df_target: pd.DataFrame, meta_data: 
     X_train, X_eval = scale_features(X_train, X_eval)
 
     print('training meta-classifier')
+    print(models)
     
     trained_models = fit_classifiers(X_train, y_train, cv=cv, models=models)
 

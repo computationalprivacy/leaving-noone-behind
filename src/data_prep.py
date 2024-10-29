@@ -75,53 +75,6 @@ def get_target_record(df: pd.DataFrame, index: int) -> pd.DataFrame:
     '''
     return df.loc[index:index]
 
-def sample_split_data_for_attack(df: pd.DataFrame, target_record: pd.DataFrame,
-                          n_aux: int, n_test: int) -> tuple:
-    # make sure the target record (or another record that is equal to the target record)
-    # is not present in either test or aux
-    cols_equal_to_target = (df[df.columns].values == target_record[df.columns].values).sum(axis = 1)
-    df_wo_target = df[cols_equal_to_target != len(df.columns)]
-    # check if this got rid of at least the target record
-    assert len(df) - len(df_wo_target) >= 1
-
-    # and that you sample aux and test in a disjoint fashion
-    indices = sample(list(df_wo_target.index), n_aux + n_test)
-    df_to_use = df_wo_target.loc[indices]
-    df_aux = df_to_use.iloc[:n_aux]
-    df_test = df_to_use.iloc[n_aux:]
-    return df_aux, df_test
-
-def sample_split_data_for_attack_specific(df: pd.DataFrame, target_record: pd.DataFrame, reference_record: pd.DataFrame, PATH_TEST: str,
-                          n_aux: int, n_test: int) -> tuple:
-    # make sure the target record (or another record that is equal to the target record)
-    # is not present in either test or aux
-    cardinal = len(df)
-    with open(PATH_TEST,'rb') as f:
-        indexs = pickle.load(f)
-        
-    indexs.remove(target_record.index)
-    print(target_record.index)
-    df_test = df.loc[indexs]
-    df = df.drop(indexs,axis='index')
-    print(len(df))
-    cols_equal_to_target = (df[df.columns].values == target_record[df.columns].values).sum(axis = 1)
-    df_wo_target = df[cols_equal_to_target != len(df.columns)]
-    cols_equal_to_reference = (df_wo_target[df_wo_target.columns].values == reference_record[df_wo_target.columns].values).sum(axis = 1)
-    df_wo_target_and_reference = df_wo_target[cols_equal_to_reference != len(df_wo_target.columns)]
-    # check if this got rid of at least the target records
-    assert cardinal - len(df_wo_target_and_reference_and_test) >= 1001
-    # and that you sample aux and test in a disjoint fashion
-    indices = sample(list(df_wo_target_and_reference.index), n_aux)
-    print('INDICES')
-    print(indices[:20])
-    print('--------------------------')
-    df_to_use = df_wo_target_and_reference.loc[indices]
-    df_aux = df_to_use.iloc[:n_aux]
-    #df_test = df_to_use.iloc[n_aux:]
-    with open(PATH_TEST,'wb') as f:
-        pickle.dump(df_test.index,f)
-    return df_aux, df_test
-
 def merge_datasets(df_secant: pd.DataFrame) -> pd.DataFrame:
     '''
     Will merge the list of dataset given in entry into a global dataset

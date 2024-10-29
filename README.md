@@ -3,7 +3,7 @@
 This library is made to make accurately estimating the privacy risk for records used to train synthetic datasets easy and clear. It contains methods for fast selection of high risk records and membership inference attacks against SDGs. The library is compatible with all SDGs implemented in the [reprosyn](https://github.com/alan-turing-institute/reprosyn) repository.
 
 This library is based on work presented in the following papers:
-1. [Lost in the Averages: : A New Specific Setup to Evaluate Membership Inference Attacks Against Machine Learning Models](https://arxiv.org/abs/2405.15423)
+1. [Lost in the Averages: A New Specific Setup to Evaluate Membership Inference Attacks Against Machine Learning Models](https://arxiv.org/abs/2405.15423)
 2. [Achilles' Heels: Vulnerable Record Identification in Synthetic Data Publishing](https://arxiv.org/abs/2306.10308)
 
 ## Installing the environment
@@ -22,11 +22,11 @@ To replicate our conda environment, run the following commands:
 
 3. Install the C-based optimized QBS:
     - `cd src/optimized_qbs/`
-    - `python setup.py install`
+    - `python setup.py install` (check whether/how to include this or just link to it and have ppl )
 
 4. Install remaining dependencies:
     - `pip install -r requirements.txt`
 
 ## Getting started
 
-See our intro notebook to understand how to get started using our library!
+See our [intro notebook](https://gitlab.doc.ic.ac.uk/cpg/research/leaving-noone-behind/-/blob/master/example.ipynb?ref_type=heads) to understand how to get started using our library!

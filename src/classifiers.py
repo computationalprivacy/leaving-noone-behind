@@ -39,7 +39,6 @@ def drop_zero_cols(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
     X_test = X_test.drop(cols_to_drop, axis=1)
     return X_train, X_test
 
-
 def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame=None) -> tuple:
     """
     Scales the features in X_train by standardizing them.
@@ -255,7 +254,7 @@ def fit_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, 
             
         trained_models.append(clf)
         
-        return trained_models
+    return trained_models
 
 def fit_validate_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, X_test: pd.DataFrame,
                              y_test: pd.DataFrame, models: list, cv: bool = False) -> tuple:

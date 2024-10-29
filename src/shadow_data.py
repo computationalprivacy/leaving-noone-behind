@@ -1,15 +1,12 @@
 ### Add pipeline to create data for shadow modeling
-import asyncio
 import pickle as pickle
-from random import choice, sample
+from random import sample
 
-import numpy as np
 import pandas as pd
-from tqdm import tqdm
 import concurrent.futures
 
 
-from src.generators import Generator, get_generator
+from src.generators import get_generator
 from src.utils import blockPrint, enablePrint
 
 ### Parallelized functions for generating shadow and evaluation synthetic datasets
@@ -156,7 +153,7 @@ def generate_datasets_parallel(df_aux: pd.DataFrame, df_target: pd.DataFrame, me
                 )
             )
         datasets_and_labels = [f.result() for f in concurrent.futures.as_completed(futures)]
-    return datasets_and_labels # shadow_datasets, shadow_membership_labels, evaluation_datasets, evaluation_membership_labels
+    return datasets_and_labels
 
 def generate_datasets(df_aux: pd.DataFrame, df_target: pd.DataFrame, meta_data: list, target_record_id: int, df_eval: pd.DataFrame, generator_name: str,
                                  n_synth: int = 1000, n_original: int = 1000, n_datasets: int = 1000, seeds_train: list = None, seeds_eval: list = None, epsilon: float = 0.0):
