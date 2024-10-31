@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import pandas as pd
@@ -29,8 +30,6 @@ def mia(path_to_data: str, path_to_metadata: str, path_to_data_split: str, targe
         List of target records for MIA.
     generator_name: str
         Name of the data generator being used.
-    n_original: int
-        Number of original records to use for training. Defaults to the size of df_target if not provided.
     n_synth: int
         Number of synthetic records to use. Defaults to the size of df_target if not provided.
     n_datasets: int
@@ -60,6 +59,8 @@ def mia(path_to_data: str, path_to_metadata: str, path_to_data_split: str, targe
                              models = models)
         mia_results.append(mia_result)
 
+    os.makedirs(output_path, exist_ok=True)
+    
     with open(output_path+'mia_results.pickle', 'wb') as f:
         pickle.dump(mia_results, f)
     return mia_results
@@ -89,8 +90,6 @@ def train_evaluate_mia(df_aux:pd.DataFrame, df_target: pd.DataFrame, meta_data: 
             A list of column names representing continuous features.
         categorical_cols: list
             A list of column names representing categorical features.
-        n_original: int, optional
-            Number of original records to use for generating shadow datasets (default is 1000).
         n_synth: int, optional
             Number of synthetic records to generate for each shadow dataset (default is 1000).
         n_datasets: int, optional
