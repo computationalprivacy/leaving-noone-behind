@@ -17,7 +17,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",  # for Google and NumPy style docstrings
     "sphinx.ext.viewcode",  # for linking to source code
-    "sphinx_autodoc_typehints",
 ]
 
 
