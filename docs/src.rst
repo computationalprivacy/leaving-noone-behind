@@ -1,9 +1,3 @@
-src package
-===========
-
-Submodules
-----------
-
 src.classifiers module
 ----------------------
 
