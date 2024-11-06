@@ -12,10 +12,10 @@ documentation for details.
 
 
 .. toctree::
-:maxdepth: 2
-:caption: Contents:
+   :maxdepth: 2
+   :caption: Contents:
 
-modules
-src
-src.optimized_qbs
+   modules
+   src
+   src.optimized_qbs
 
