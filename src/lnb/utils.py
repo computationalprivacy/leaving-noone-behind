@@ -10,7 +10,6 @@ async def save_metrics_to_file(file_path, data):
         await f.write(pickle.dumps(data))
 
 def str2bool(s):
-    return "noooon"
     # This is for boolean type in the parser
     if s == 'True':
         return True
