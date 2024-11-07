@@ -26,30 +26,27 @@ def apply_feature_extractor_to_datasets(
     """
     Apply feature extraction to both training and evaluation datasets.
 
-    Parameters
-    -----------
-        datasets_train: list
-            A list of training datasets, each containing synthetic data and corresponding membership labels.
-        datasets_eval: list
-            A list of evaluation datasets, each containing synthetic data and corresponding membership labels.
-        target_record: pd.DataFrame
-            The target record for which features are to be extracted.
-        ohe: OneHotEncoder
-            A fitted one-hot encoder instance.
-        ohe_columns: list
-            A list of column names representing one-hot encoded categorical features.
-        ohe_column_names: list
-            The names of the columns of the one-hot encoding result.
-        continuous_cols: list
-            A list of column names representing continuous features.
-        feature_extractors: list
-            A list of feature extractor functions or tuples specifying the feature extractors to be used.
-        do_ohe: list
-            A list of boolean values indicating whether one-hot encoding is required for each feature extractor.
+    :param datasets_train: A list of training datasets, each containing synthetic data and corresponding membership labels.
+    :type datasets_train: list
+    :param datasets_eval: A list of evaluation datasets, each containing synthetic data and corresponding membership labels.
+    :type datasets_eval: list
+    :param target_record: The target record for which features are to be extracted.
+    :type target_record: pd.DataFrame
+    :param ohe: A fitted one-hot encoder instance.
+    :type ohe: OneHotEncoder
+    :param ohe_columns: A list of column names representing one-hot encoded categorical features.
+    :type ohe_columns: list
+    :param ohe_column_names: The names of the columns of the one-hot encoding result.
+    :type ohe_column_names: list
+    :param continuous_cols: A list of column names representing continuous features.
+    :type continuous_cols: list
+    :param feature_extractors: A list of feature extractor functions or tuples specifying the feature extractors to be used.
+    :type feature_extractors: list
+    :param do_ohe: A list of boolean values indicating whether one-hot encoding is required for each feature extractor.
+    :type do_ohe: list
 
-    Returns
-    --------
-        list: A list containing extracted features and labels for both training and evaluation datasets.
+    :return: A list containing extracted features and labels for both training and evaluation datasets.
+    :rtype: list
     """
 
     queries_list_train = [None] * len(feature_extractors)
@@ -153,41 +150,38 @@ def apply_feature_extractor_one_dataset_parallel(
     """
     Apply feature extraction in parallel for a given dataset.
 
-    Parameters
-    -----------
-        dataset: list
-            The dataset for which features are to be extracted.
-        target_record: pd.DataFrame
-            The target record for which features are to be extracted.
-        ohe: OneHotEncoder
-            A fitted one-hot encoder instance.
-        ohe_columns: list
-            A list of column names representing one-hot encoded categorical features.
-        ohe_column_names: list
-            The names of the columns of the one-hot encoding result.
-        continuous_cols: list
-            A list of column names representing continuous features.
-        feature_extractors: list
-            A list of feature extractor functions or tuples specifying the feature extractors to be used.
-        do_ohe: list
-            A list of boolean values indicating whether one-hot encoding is required for each feature extractor.
-        queries_list: list
-            A list of queries for extracting features.
-        query_extractor: function
-            The function used for extracting features when the feature extractor is a tuple.
-        train: bool
-            A boolean indicating if the dataset is for training.
-        membership_label: bool
-            A boolean indicating if membership labeling is required.
-        i: int
-            An index to specify which feature extractor to use.
+    :param dataset: The dataset for which features are to be extracted.
+    :type dataset: pd.DataFrame
+    :param target_record: The target record for which features are to be extracted.
+    :type target_record: pd.DataFrame
+    :param ohe: A fitted one-hot encoder instance.
+    :type ohe: OneHotEncoder
+    :param ohe_columns: A list of column names representing one-hot encoded categorical features.
+    :type ohe_columns: list
+    :param ohe_column_names: The names of the columns of the one-hot encoding result.
+    :type ohe_column_names: list
+    :param continuous_cols: A list of column names representing continuous features.
+    :type continuous_cols: list
+    :param feature_extractors: A list of feature extractor functions or tuples specifying the feature extractors to be used.
+    :type feature_extractors: list
+    :param do_ohe: A list of boolean values indicating whether one-hot encoding is required for each feature extractor.
+    :type do_ohe: list
+    :param queries_list: A list of queries for extracting features.
+    :type queries_list: list
+    :param query_extractor: The function used for extracting features when the feature extractor is a tuple.
+    :type query_extractor: function
+    :param train: A boolean indicating if the dataset is for training.
+    :type train: bool
+    :param membership_label: A boolean indicating if membership labeling is required.
+    :type membership_label: bool
+    :param i: An index to specify which feature extractor to use.
+    :type i: int
 
-    Returns
-    --------
-        tuple: A tuple containing:
-            - X (pd.DataFrame): A DataFrame containing the extracted features.
-            - membership_label (bool): The membership label associated with the dataset.
-            - train (bool): The training flag.
+    :return: A tuple containing:
+        - X (:class:`pd.DataFrame`): A DataFrame containing the extracted features.
+        - membership_label (bool): The membership label associated with the dataset.
+        - train (bool): The training flag.
+    :rtype: tuple
     """
 
     if sum(do_ohe) != 0:
@@ -248,36 +242,33 @@ def extract_one_feature(
     """
     Extract features using a given feature extractor.
 
-    Parameters
-    -----------
-        feature_extractor: function or tuple
-            The feature extractor function or a tuple containing the function and additional parameters.
-        queries: list
-            A list of queries for extracting features.
-        dataset: pd.DataFrame
-            The dataset containing the features for extraction.
-        ohe_columns: list
-            A list of column names representing one-hot encoded categorical features.
-        target_record: pd.DataFrame
-            The target record for which features are to be extracted.
-        query_extractor: function
-            The function used for extracting features when the feature extractor is a tuple.
-        do_ohe: bool
-            A boolean indicating whether one-hot encoding is required.
-        data_ohe: pd.DataFrame
-            The one-hot encoded version of the dataset.
-        ohe_column_names: list
-            The names of the columns of the one-hot encoding result.
-        continuous_cols: list
-            A list of column names representing continuous features.
-        target_ohe: pd.DataFrame
-            The one-hot encoded version of the target record.
+    :param feature_extractor: The feature extractor function or a tuple containing the function and additional parameters.
+    :type feature_extractor: function or tuple
+    :param queries: A list of queries for extracting features.
+    :type queries: list
+    :param dataset: The dataset containing the features for extraction.
+    :type dataset: pd.DataFrame
+    :param ohe_columns: A list of column names representing one-hot encoded categorical features.
+    :type ohe_columns: list
+    :param target_record: The target record for which features are to be extracted.
+    :type target_record: pd.DataFrame
+    :param query_extractor: The function used for extracting features when the feature extractor is a tuple.
+    :type query_extractor: function
+    :param do_ohe: A boolean indicating whether one-hot encoding is required.
+    :type do_ohe: bool
+    :param data_ohe: The one-hot encoded version of the dataset.
+    :type data_ohe: pd.DataFrame
+    :param ohe_column_names: The names of the columns of the one-hot encoding result.
+    :type ohe_column_names: list
+    :param continuous_cols: A list of column names representing continuous features.
+    :type continuous_cols: list
+    :param target_ohe: The one-hot encoded version of the target record.
+    :type target_ohe: pd.DataFrame
 
-    Returns
-    --------
-        tuple: A tuple containing:
-            - features (list): The extracted features.
-            - col_names (list): The names of the extracted features.
+    :returns: A tuple containing:
+        - features (list): The extracted features.
+        - col_names (list): The names of the extracted features.
+    :rtype: tuple
     """
     if isinstance(feature_extractor, tuple):
         dataset_int = dataset.copy()
@@ -339,6 +330,21 @@ def apply_ohe(
     ohe_column_names: list,
     continous_cols: list,
 ) -> pd.DataFrame:
+    """One-hot-encode dataset
+
+    :param df: dataset to encode
+    :type df: pd.DataFrame
+    :param ohe: OneHotEncoder instance
+    :type ohe: OneHotEncoder
+    :param categorical_cols: names of categorical columns
+    :type categorical_cols: list
+    :param ohe_column_names: names for one-hot-encoded columns
+    :type ohe_column_names: list
+    :param continous_cols: names of continuous columns
+    :type continous_cols: list
+    :return: One-hot-encoded dataset
+    :rtype: pd.DataFrame
+    """
     ohe_values = ohe.transform(df[categorical_cols]).toarray()
     ohe_df = pd.DataFrame(
         data=ohe_values, columns=ohe_column_names, index=df.index
@@ -357,8 +363,21 @@ def extract_naive_features(
     continuous_cols: list,
     target_record=pd.DataFrame,
 ) -> tuple:
-    """Compute the Naive method as described in "Synthetic data -- anonymisation groundhog day" (Usenix 2022)"""
+    """Compute the Naive method as described in "Synthetic data -- anonymisation groundhog day" (Usenix 2022)
 
+    :param synthetic_df: Synthetic dataset
+    :type synthetic_df: pd.DataFrame
+    :param categorical_cols: names of categorical columns
+    :type categorical_cols: list
+    :param ohe_column_names: names of one-hot encoded columns
+    :type ohe_column_names: list
+    :param continuous_cols: names of continuous columns
+    :type continuous_cols: list
+    :param target_record: dataframe containing target record, defaults to pd.DataFrame
+    :type target_record: pd.DataFrame, optional
+    :return: extracted features and names
+    :rtype: tuple
+    """
     ## (1) For each continuous col, extract the mean, median and variance
     # get mean, median and var for each col
     means = [np.mean(synthetic_df[col]) for col in continuous_cols]
@@ -400,6 +419,21 @@ def extract_correlation_features(
     continuous_cols: list,
     target_record=pd.DataFrame,
 ) -> tuple:
+    """Extract correlation features
+
+    :param synthetic_df: Synthetic dataset
+    :type synthetic_df: pd.DataFrame
+    :param categorical_cols: names of categorical columns
+    :type categorical_cols: list
+    :param ohe_column_names: names of one-hot encoded columns
+    :type ohe_column_names: list
+    :param continuous_cols: names of continuous columns
+    :type continuous_cols: list
+    :param target_record: dataframe containing target record, defaults to pd.DataFrame
+    :type target_record: pd.DataFrame, optional
+    :return: extracted features and names
+    :rtype: tuple
+    """
     corr_matrix = synthetic_df.corr()
     # replace nan values with 0
     corr_matrix = corr_matrix.fillna(0.0)
@@ -425,13 +459,32 @@ def get_queries(
 ) -> list:
     """
     Condition options:
-               0  ->  no condition on this attribute;
-                       1  ->  ==
-                      -1  ->  !=
-                       2  ->  >
-                       3  ->  >=
-                      -2  ->  <
-                      -3  ->  <=
+         0  ->  no condition on this attribute;
+         1  ->  ==
+        -1  ->  !=
+         2  ->  >
+         3  ->  >=
+        -2  ->  <
+        -3  ->  <=
+
+    :param orders: list containing numbers of features to consider when extracting queries from feature combinations
+    :type orders: list
+    :param categorical_indices: indices of categorical columns
+    :type categorical_indices: list
+    :param continous_indices: indices of continuous columns
+    :type continous_indices: list
+    :param num_cols: number of columns in dataset
+    :type num_cols: int
+    :param number: number of combinations to return
+    :type number: int
+    :param cat_condition_options: defaults to (-1, 1)
+    :type cat_condition_options: tuple, optional
+    :param cont_condition_options:  defaults to (3, -3)
+    :type cont_condition_options: tuple, optional
+    :param random_state: random seed, defaults to 42
+    :type random_state: int, optional
+    :return: extracted features and names
+    :rtype: list
     """
 
     all_combinations = []
@@ -480,6 +533,17 @@ def get_queries(
 def feature_extractor_queries_CQBS(
     synthetic_df: pd.DataFrame, target_record: pd.DataFrame, queries: list
 ):
+    """Extract query-based features
+
+    :param synthetic_df: synthetic data
+    :type synthetic_df: pd.DataFrame
+    :param target_record: target record
+    :type target_record: pd.DataFrame
+    :param queries: queries
+    :type queries: list
+    :return: extracted features and names
+    :rtype: tuple
+    """
     # set up qbs of synthetic dataframe and define target values
     qbs_data = qbs.SimpleQBS(synthetic_df.itertuples(index=False, name=None))
     target_values = [tuple(target_record.values[0])]
@@ -506,6 +570,17 @@ def feature_extractor_queries_CQBS(
 def feature_extractor_topX_full(
     synthetic_df: pd.DataFrame, target_record_ohe: pd.DataFrame, top_X: int = 50
 ):
+    """Extract features based on top X cosine similarity between synthetic data and target record
+
+    :param synthetic_df: synthetic data
+    :type synthetic_df: pd.DataFrame
+    :param target_record_ohe: one-hot encoded target record
+    :type target_record_ohe: pd.DataFrame
+    :param top_X: number of most similar records to consider, defaults to 50
+    :type top_X: int, optional
+    :return: extracted features and names
+    :rtype: tuple
+    """
     all_cos_sim = np.array(
         [
             cosine_similarity(
@@ -531,6 +606,15 @@ def feature_extractor_topX_full(
 def feature_extractor_distances(
     synthetic_df: pd.DataFrame, target_record_ohe: pd.DataFrame
 ):
+    """Extract features based on cosine similarity between synthetic data and target record
+
+    :param synthetic_df: synthetic data
+    :type synthetic_df: pd.DataFrame
+    :param target_record_ohe: one-hot encoded target record
+    :type target_record_ohe: pd.DataFrame
+    :return: extracted features and names
+    :rtype: tuple
+    """
     all_cos_sim = np.array(
         [
             cosine_similarity(
@@ -561,33 +645,29 @@ def apply_feature_extractor_sequential(
 ) -> tuple:
     """
     Given a list of feature extractor functions and synthetic datasets, extract all features and
-    create a new dataframe with all features per dataset as individual records.
-    Parameters
-    -----------
-    datasets: list
-        A list of shadow synthetic datasets.
-    target_record: pd.DataFrame
-        DataFrame of one record with the target record, potentially to be used by the feature extractor.
-    labels: list
-        A list of labels corresponding to the datasets.
-    ohe: OneHotEncoder
-        A fitted one-hot encoder instance.
-    ohe_columns: list
-        The columns on which the one-hot encoding should be applied.
-    ohe_column_names: list
-        The names of the columns of the one-hot encoding result.
-    continuous_cols: list
-        The columns that are continuous.
-    feature_extractors: list
-        A list of feature extractor functions. All functions have as input a dataset and output a list of features and a list of column names.
-        If more than one feature extractor is specified, all features are extracted and appended.
-    do_ohe: list
-        A list of boolean values indicating whether each feature extractor function requires the dataset to be one-hot encoded or not.
+    create a new DataFrame with all features per dataset as individual records.
 
-    Returns
-    --------
-    pd.DataFrame
-        DataFrame containing all features per dataset and the corresponding labels
+    :param datasets: A list of shadow synthetic datasets.
+    :type datasets: list
+    :param target_record: DataFrame of one record with the target record, potentially to be used by the feature extractor.
+    :type target_record: pd.DataFrame
+    :param labels: A list of labels corresponding to the datasets.
+    :type labels: list
+    :param ohe: A fitted one-hot encoder instance.
+    :type ohe: OneHotEncoder
+    :param ohe_columns: The columns on which the one-hot encoding should be applied.
+    :type ohe_columns: list
+    :param ohe_column_names: The names of the columns of the one-hot encoding result.
+    :type ohe_column_names: list
+    :param continuous_cols: The columns that are continuous.
+    :type continuous_cols: list
+    :param feature_extractors: A list of feature extractor functions. All functions have as input a dataset and output a list of features and a list of column names. If more than one feature extractor is specified, all features are extracted and appended.
+    :type feature_extractors: list
+    :param do_ohe: A list of boolean values indicating whether each feature extractor function requires the dataset to be one-hot encoded or not.
+    :type do_ohe: list
+
+    :returns: DataFrame containing all features per dataset and the corresponding labels.
+    :rtype: pd.DataFrame
     """
     all_features = []
 
@@ -676,26 +756,21 @@ def create_queries(
     """
     Generate queries based on the provided feature extractors and dataset.
 
-    Parameters
-    -----------
-        queries_list: list
-            A list to store the generated queries for each feature extractor.
-        feature_extractors: list
-            A list of feature extractors, where each element can be a function or a tuple with parameters.
-        dataset: pd.DataFrame
-            The dataset containing the features for query generation.
-        ohe_columns: list
-            A list of column names representing one-hot encoded categorical features.
-        continuous_cols: list
-            A list of column names representing continuous features.
+    :param queries_list: A list to store the generated queries for each feature extractor.
+    :type queries_list: list
+    :param feature_extractors: A list of feature extractors, where each element can be a function or a tuple with parameters.
+    :type feature_extractors: list
+    :param dataset: The dataset containing the features for query generation.
+    :type dataset: pd.DataFrame
+    :param ohe_columns: A list of column names representing one-hot encoded categorical features.
+    :type ohe_columns: list
+    :param continuous_cols: A list of column names representing continuous features.
+    :type continuous_cols: list
 
-    Returns
-    --------
-        tuple: A tuple containing:
-            - queries_list: list
-                  The updated list of queries generated for each feature extractor.
-            - query_extractor:
-                  The last used query extractor from the feature extractors list.
+    :returns: A tuple containing:
+        - queries_list (list): The updated list of queries generated for each feature extractor.
+        - query_extractor: The last used query extractor from the feature extractors list.
+    :rtype: tuple
     """
     for i, feature_extractor in enumerate(feature_extractors):
         query_extractor, orders, number, conditions = feature_extractor
@@ -720,20 +795,15 @@ def get_feature_extractors(feature_extractor_names: list) -> tuple:
     Given a list of strings or tuples specifying the feature extractors to be used,
     create a list of the corresponding functions and parameters.
 
-    Parameters
-    ------------
-    feature_extractor_names: list
-        A list of feature extractors, where each element can be:
-            - A string specifying a feature extractor ('naive', 'correlation', 'closest_X_full', 'all_distances')
-            - A tuple with a feature extractor name and additional parameters (name, orders, number, conditions)
+    :param feature_extractor_names: A list of feature extractors, where each element can be:
+        - A string specifying a feature extractor (e.g., 'naive', 'correlation', 'closest_X_full', 'all_distances')
+        - A tuple with a feature extractor name and additional parameters (name, orders, number, conditions)
+    :type feature_extractor_names: list
 
-    Returns
-    --------
-        tuple: A tuple containing:
-            - feature_extractors: list
-                A list of functions (or tuples with functions and parameters) corresponding to the requested feature extractors.
-            - do_ohe: list
-                A list of boolean values indicating whether one-hot encoding (OHE) should be performed for each feature extractor.
+    :returns: A tuple containing:
+        - feature_extractors (list): A list of functions (or tuples with functions and parameters) corresponding to the requested feature extractors.
+        - do_ohe (list): A list of boolean values indicating whether one-hot encoding (OHE) should be performed for each feature extractor.
+    :rtype: tuple
     """
     feature_extractors, do_ohe = [], []
     for feat in feature_extractor_names:

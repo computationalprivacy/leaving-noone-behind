@@ -41,21 +41,16 @@ def drop_zero_cols(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
 
 
 def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
+    """Scales the features in X_train by standardizing them. If X_test is provided,
+    it scales the test set using the same mean and standard deviation as X_train.
+
+    :param X_train: The training data
+    :type X_train: pd.DataFrame
+    :param X_test: The test data (default is None), defaults to None
+    :type X_test: pd.DataFrame, optional
+    :return: If X_test is not provided, returns the standardized X_train. If X_test is provided, returns both the standardized X_train and X_test.
+    :rtype: tuple
     """
-    Scales the features in X_train by standardizing them.
-    If X_test is provided, it scales the test set using the same mean and standard deviation as X_train.
-
-    Parameters:
-    X_train: pd.DataFrame
-        The training data
-    X_test: pd.DataFrame, optional
-        The test data (default is None)
-
-    Returns:
-    If X_test is not provided, returns the standardized X_train.
-    If X_test is provided, returns both the standardized X_train and X_test.
-    """
-
     X_train_values = X_train.values
     all_means = X_train_values.mean(axis=0)
     all_stds = X_train_values.std(axis=0)
@@ -79,32 +74,26 @@ def validate_clf(
     X_test: pd.DataFrame,
     y_test: pd.DataFrame,
 ) -> tuple:
-    """
-    Evaluates the classifier's performance on both the training and test datasets.
+    """Evaluates the classifier's performance on both the training and test datasets.
     Prints the accuracy and AUC (Area Under the Curve) for both training and test sets.
 
-    Parameters:
-    -----------
-    clf: ClassifierMixin
-        The classifier to be evaluated (any estimator with `predict` and `predict_proba` methods).
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    X_test: pd.DataFrame
-        The feature data for the test set.
-    y_test: pd.DataFrame
-        pd.DataFrameThe target labels for the test set.
-
-    Returns:
-    --------
-    tuple: A tuple containing:
+    :param clf: The classifier to be evaluated (any estimator with `predict` and `predict_proba` methods).
+    :type clf: ClassifierMixin
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param X_test: The feature data for the test set.
+    :type X_test: pd.DataFrame
+    :param y_test: pd.DataFrameThe target labels for the test set.
+    :type y_test: pd.DataFrame
+    :return: A tuple containing:
       - Training accuracy
       - Training AUC
       - Test accuracy
       - Test AUC (if computable)
+    :rtype: tuple
     """
-
     y_train_pred = clf.predict(X_train)
     train_acc = accuracy_score(y_train, y_train_pred)
     print("Training accuracy: ", train_acc)
@@ -126,24 +115,18 @@ def validate_clf(
 def train_LogisticRegression(
     X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
 ) -> LogisticRegression:
-    """
-    Trains a logistic regression model using either a fixed regularization parameter or cross-validation.
+    """Trains a logistic regression model using either a fixed regularization parameter or cross-validation.
 
-    Parameters:
-    ------------
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    cv: bool, optional
-        If True, performs cross-validation to find the best regularization parameter.
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param cv: If True, performs cross-validation to find the best regularization parameter.
         If False, trains the model using a fixed regularization parameter (default is False).
-
-    Returns:
-    ---------
-    LogisticRegression: A trained logistic regression model.
-
-    If `cv=True`, the function also prints the best regularization parameter (`C`) found during cross-validation.
+        Defaults to False
+    :type cv: bool, optional
+    :return: A trained logistic regression model.
+    :rtype: LogisticRegression
     """
     if not cv:
         clf = LogisticRegression(C=0.001)
@@ -159,24 +142,17 @@ def train_LogisticRegression(
 def train_RandomForest(
     X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
 ) -> RandomForestClassifier:
-    """
-    Trains a random forest classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
+    """Trains a random forest classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
 
-    Parameters:
-    -----------
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    cv: bool, optional
-        If True, performs cross-validation to find the best hyperparameters.
-                         If False, trains the model using fixed hyperparameters (default is False).
-
-    Returns:
-    --------
-    RandomForestClassifier: A trained random forest classifier.
-
-    If `cv=True`, the function performs a grid search to tune the hyperparameters and prints the best parameters found.
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param cv: If True, performs cross-validation to find the best hyperparameters.
+                         If False, trains the model using fixed hyperparameters. Defaults to False
+    :type cv: bool, optional
+    :return: A trained random forest classifier.
+    :rtype: RandomForestClassifier
     """
     if not cv:
         clf = RandomForestClassifier(max_depth=10, n_estimators=100)
@@ -195,26 +171,18 @@ def train_RandomForest(
 def train_MLP(
     X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
 ) -> MLPClassifier:
+    """Trains a Multi-layer Perceptron (MLP) classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
+
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param cv: If True, performs cross-validation to find the best hyperparameters.
+                         If False, trains the model using fixed hyperparameters. Defaults to False
+    :type cv: bool, optional
+    :return: A trained MLP classifier.
+    :rtype: MLPClassifier
     """
-    Trains a Multi-layer Perceptron (MLP) classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
-
-    Parameters:
-    -----------
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    cv: bool, optional
-        If True, performs cross-validation to find the best hyperparameters.
-        If False, trains the model using fixed hyperparameters (default is False).
-
-    Returns:
-    --------
-    MLPClassifier: A trained MLP classifier.
-
-    If `cv=True`, the function performs a grid search to tune the hyperparameters and prints the best parameters found.
-    """
-
     if not cv:
         clf = MLPClassifier(hidden_layer_sizes=(100, 100), alpha=0.01)
         clf.fit(X_train, y_train)
@@ -232,24 +200,17 @@ def train_MLP(
 def fit_classifier(
     X_train: pd.DataFrame, y_train: pd.DataFrame, model: str, cv=False
 ):
-    """
-    Trains a classifier based on the specified model type using the provided training data.
+    """Trains a classifier based on the specified model type using the provided training data.
 
-    Parameters:
-    -----------
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    model: str
-        The type of classifier to train. Supported values are: 'logistic_regression', 'random_forest', 'mlp'.
-    cv: bool, optional
-        If True, performs cross-validation during model training to tune hyperparameters.
-        If False, trains the model using fixed hyperparameters (default is False). This is a modification
-
-    Returns:
-    --------
-    object: A trained classifier object based on the specified model.
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param cv: If True, performs cross-validation to find the best hyperparameters.
+                         If False, trains the model using fixed hyperparameters. Defaults to False
+    :type cv: bool, optional
+    :return: A trained classifier object based on the specified model.
+    :rtype: object
     """
 
     if model == "logistic_regression":
@@ -266,18 +227,19 @@ def fit_classifier(
 def fit_classifiers(
     X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, cv=False
 ):
-    """_summary_
+    """Trains classifiers based on the specified model types using the provided training data.
 
-    :param X_train: _description_
+    :param X_train: The feature data for the training set.
     :type X_train: pd.DataFrame
-    :param y_train: _description_
+    :param y_train: The target labels for the training set.
     :type y_train: pd.DataFrame
-    :param models: _description_
+    :param models: A list of model names (as strings) to be trained and validated. Supported models are: 'logistic_regression', 'random_forest', 'mlp'.
     :type models: list
-    :param cv: _description_, defaults to False
+    :param cv: If True, performs cross-validation to find the best hyperparameters.
+                         If False, trains the model using fixed hyperparameters. Defaults to False
     :type cv: bool, optional
-    :return: _description_
-    :rtype: _type_
+    :return: list of fitted classifiers
+    :rtype: list
     """
     trained_models = []
 
@@ -304,30 +266,24 @@ def fit_validate_classifiers(
     models: list,
     cv: bool = False,
 ) -> tuple:
-    """
-    Trains and validates multiple classifiers on the provided training and test sets.
+    """Trains and validates multiple classifiers on the provided training and test sets.
 
-    Parameters:
-    ------------
-    X_train: pd.DataFrame
-        The feature data for the training set.
-    y_train: pd.DataFrame
-        The target labels for the training set.
-    X_test: pd.DataFrame
-        The feature data for the test set.
-    y_test: pd.DataFrame
-        The target labels for the test set.
-    models: list
-        A list of model names (as strings) to be trained and validated. Supported models are: 'logistic_regression', 'random_forest', 'mlp'.
-    cv: bool, optional
-        If True, performs cross-validation during model training to tune hyperparameters.
-        If False, trains the model using fixed hyperparameters (default is False).
-
-    Returns:
-    ---------
-    tuple: A tuple containing:
+    :param X_train: The feature data for the training set.
+    :type X_train: pd.DataFrame
+    :param y_train: The target labels for the training set.
+    :type y_train: pd.DataFrame
+    :param X_test: The feature data for the test set.
+    :type X_test: pd.DataFrame
+    :param y_test: pd.DataFrameThe target labels for the test set.
+    :type y_test: pd.DataFrame
+    :param models: _description_
+    :type models: A list of model names (as strings) to be trained and validated. Supported models are: 'logistic_regression', 'random_forest', 'mlp'.
+    :param cv: If True, performs cross-validation during model training to tune hyperparameters. If False, trains the model using fixed hyperparameters (default is False). Defaults to False
+    :type cv: bool, optional
+    :return: A tuple containing:
       - A list of trained models.
       - A list of the results (training and test accuracy, AUC, etc.) for each model.
+    :rtype: tuple
     """
     trained_models, all_results = [], []
     for model in models:

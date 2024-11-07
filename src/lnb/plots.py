@@ -6,7 +6,14 @@ import seaborn as sns
 from lnb.distance import top_n_vulnerable_dists
 
 
-def plot_achilles(distances: dict, n: int):
+def plot_achilles(distances: dict[int,float], n: int)->None:
+    """Plot histogram of Achilles scores
+
+    :param distances: dictionary where key is record id, value is Achilles score
+    :type distances: dict
+    :param n: number of most vulnerable records to identify
+    :type n: int
+    """
     sns.set_theme(style="white")
 
     top_n = top_n_vulnerable_dists(distances, n)
@@ -40,7 +47,12 @@ def plot_achilles(distances: dict, n: int):
     plt.savefig("achilles_scores.png")
 
 
-def calculate_statistics(distances: dict):
+def calculate_statistics(distances: dict[int,float])->None:
+    """Calculate summary statistics of Achilles distances
+
+    :param distances: dictionary where key is record id, value is Achilles score
+    :type distances: dict
+    """
     mean_score = np.mean(list(distances.values()))
     q3 = np.quantile(list(distances.values()), 0.75)
 
@@ -58,7 +70,14 @@ def calculate_statistics(distances: dict):
     )
 
 
-def plot_mia_scores(mia_results: list, output_path: str = None):
+def plot_mia_scores(mia_results: list[float], output_path: str = None)->None:
+    """Plot MIA scores
+
+    :param mia_results: list containing MIA scores
+    :type mia_results: list[float]
+    :param output_path: path to save plot, defaults to None
+    :type output_path: str, optional
+    """
     plot_df = mia_results_to_df(mia_results)
     _, axs = plt.subplots(1, 2, figsize=(15, 5), sharey=True)
 
@@ -79,7 +98,14 @@ def plot_mia_scores(mia_results: list, output_path: str = None):
         plt.savefig(output_path + "mia_scores_barplot.png")
 
 
-def mia_results_to_df(mia_results: list):
+def mia_results_to_df(mia_results: list[float])->pd.DataFrame:
+    """Convert MIA results list to dataframe
+
+    :param mia_results: list containing MIA scores
+    :type mia_results: list[float]
+    :return: dataframe containing MIA results
+    :rtype: pd.DataFrame
+    """
     m = mia_results[0]
     df = pd.DataFrame()
     for model in m[1].keys():

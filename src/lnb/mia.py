@@ -31,30 +31,27 @@ def mia(
     """
     Membership Inference Attack (MIA) function to evaluate data privacy risks.
 
-    Parameters
-    -----------
-    path_to_data: str
-        Path to the data file.
-    path_to_metadata: str
-        Path to the metadata file.
-    path_to_data_split: str
-        Path to the data split information.
-    target_records: list
-        List of target records for MIA.
-    generator_name: str
-        Name of the data generator being used.
-    n_synth: int
-        Number of synthetic records to use. Defaults to the size of df_target if not provided.
-    n_datasets: int
-        Number of datasets to generate. Defaults to 1000.
-    epsilon: float
-        Differential privacy parameter. Defaults to 0.0.
-    output_path: str
-        Path to store output files. Defaults to './output/files/'.
+    :param path_to_data: Path to the data file.
+    :type path_to_data: str
+    :param path_to_metadata: Path to the metadata file.
+    :type path_to_metadata: str
+    :param path_to_data_split: Path to the data split information.
+    :type path_to_data_split: str
+    :param target_records: List of target records for MIA.
+    :type target_records: list
+    :param generator_name: Name of the data generator being used.
+    :type generator_name: str
+    :param n_synth: Number of synthetic records to use. Defaults to the size of df_target if not provided.
+    :type n_synth: int
+    :param n_datasets: Number of datasets to generate. Defaults to 1000.
+    :type n_datasets: int
+    :param epsilon: Differential privacy parameter. Defaults to 0.0.
+    :type epsilon: float
+    :param output_path: Path to store output files. Defaults to './output/files/'.
+    :type output_path: str
 
-    Returns
-    -------
-    dict: A dictionary containing the MIA results for each target record.
+    :returns: A dictionary containing the MIA results for each target record.
+    :rtype: dict
     """
 
     df, categorical_cols, continuous_cols, meta_data = load_data(
@@ -111,46 +108,43 @@ def train_evaluate_mia(
     """
     Train and evaluate a membership inference attack (MIA) using shadow datasets and target record.
 
-    Parameters
-    -----------
-        df_aux: pd.DataFrame
-            Auxiliary dataset used for generating shadow datasets.
-        df_target: pd.DataFrame
-            Dataset containing the target record for MIA.
-        meta_data: list
-            Metadata information used for feature extraction and generating synthetic datasets.
-        target_record_id: int
-            The ID of the target record for MIA.
-        df_eval: pd.DataFrame
-            Evaluation dataset used for testing the trained models.
-        generator_name: str
-            Name of the data generator used for generating synthetic datasets.
-        continuous_cols: list
-            A list of column names representing continuous features.
-        categorical_cols: list
-            A list of column names representing categorical features.
-        n_synth: int, optional
-            Number of synthetic records to generate for each shadow dataset (default is 1000).
-        n_datasets: int, optional
-            Number of shadow datasets to generate (default is 1000).
-        seeds_train: list, optional
-            List of seeds used for training dataset generation (default is None).
-        seeds_eval: list, optional
-            List of seeds used for evaluation dataset generation (default is None).
-        epsilon: float, optional
-            Differential privacy parameter for synthetic dataset generation (default is 0.0).
-        models: list, optional
-            A list of model names to use for training the meta-classifier (default is ['random_forest']).
-        cv: bool, optional
-            Whether to use cross-validation during model training (default is False).
-        output_path: str, optional
-            Path to save output files (default is './output/files/').
+    :param df_aux: Auxiliary dataset used for generating shadow datasets.
+    :type df_aux: pd.DataFrame
+    :param df_target: Dataset containing the target record for MIA.
+    :type df_target: pd.DataFrame
+    :param meta_data: Metadata information used for feature extraction and generating synthetic datasets.
+    :type meta_data: list
+    :param target_record_id: The ID of the target record for MIA.
+    :type target_record_id: int
+    :param df_eval: Evaluation dataset used for testing the trained models.
+    :type df_eval: pd.DataFrame
+    :param generator_name: Name of the data generator used for generating synthetic datasets.
+    :type generator_name: str
+    :param continuous_cols: A list of column names representing continuous features.
+    :type continuous_cols: list
+    :param categorical_cols: A list of column names representing categorical features.
+    :type categorical_cols: list
+    :param n_synth: Number of synthetic records to generate for each shadow dataset (default is 1000).
+    :type n_synth: int, optional
+    :param n_datasets: Number of shadow datasets to generate (default is 1000).
+    :type n_datasets: int, optional
+    :param seeds_train: List of seeds used for training dataset generation (default is None).
+    :type seeds_train: list, optional
+    :param seeds_eval: List of seeds used for evaluation dataset generation (default is None).
+    :type seeds_eval: list, optional
+    :param epsilon: Differential privacy parameter for synthetic dataset generation (default is 0.0).
+    :type epsilon: float, optional
+    :param models: A list of model names to use for training the meta-classifier (default is ['random_forest']).
+    :type models: list, optional
+    :param cv: Whether to use cross-validation during model training (default is False).
+    :type cv: bool, optional
+    :param output_path: Path to save output files (default is './output/files/').
+    :type output_path: str, optional
 
-    Returns
-    -------
-        tuple: A tuple containing:
-            - target_record_id (int): The ID of the target record used for MIA.
-            - model_metrics (dict): A dictionary containing AUC and accuracy metrics for each trained model.
+    :returns: A tuple containing:
+        - target_record_id (int): The ID of the target record used for MIA.
+        - model_metrics (dict): A dictionary containing AUC and accuracy metrics for each trained model.
+    :rtype: tuple
     """
 
     target_record = df_target.loc[[target_record_id]]

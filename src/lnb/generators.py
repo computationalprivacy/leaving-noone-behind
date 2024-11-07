@@ -134,6 +134,15 @@ class indhist(Generator):
 
 
 def get_generator(name_generator: str, epsilon: float):
+    """Get generator instance
+
+    :param name_generator: generator name. Supports "identity", "BAYNET", "privbayes", "CTGAN", "SYNTHPOP", "INDHIST"
+    :type name_generator: str
+    :param epsilon: epsilon for training differentially private generators
+    :type epsilon: float
+    :return: generator instance
+    :rtype: Generator
+    """
     if name_generator == "identity":
         return identity()
     if name_generator == "BAYNET":

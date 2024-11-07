@@ -6,8 +6,12 @@ import pandas as pd
 
 
 def read_metadata(metadata_path: str) -> tuple:
-    """
-    Read metadata from a json file (is necessary for the reprosyn generators)
+    """Read metadata from a json file (is necessary for the reprosyn generators)
+
+    :param metadata_path: path to metadata
+    :type metadata_path: str
+    :return: tuple containing metadata, categorical column names, and conitnuous column names
+    :rtype: tuple
     """
     with open(metadata_path, encoding="utf-8") as f:
         meta_data = json.load(f)
@@ -24,9 +28,17 @@ def read_metadata(metadata_path: str) -> tuple:
 def read_data(
     data_path: str, categorical_cols: list, continuous_cols: list
 ) -> pd.DataFrame:
-    """
-    Read given file_path (csv) and return a pd dataframe.
+    """Read given file_path (csv) and return a pd dataframe.
     If all categorical, make sure data all column values are strings
+
+    :param data_path: path to data
+    :type data_path: str
+    :param categorical_cols: names of categorical columns
+    :type categorical_cols: list
+    :param continuous_cols: names of continuous columns
+    :type continuous_cols: list
+    :return: dataframe containing loaded data
+    :rtype: pd.DataFrame
     """
     df = pd.read_csv(data_path)
     if "Person ID" in df.columns:
@@ -44,6 +56,19 @@ def normalize_cont_cols(
     df_aux: pd.DataFrame,
     types: tuple = ("Float",),
 ) -> pd.DataFrame:
+    """Normalize continuous columns
+
+    :param df: dataframe containing data to normalize
+    :type df: pd.DataFrame
+    :param meta_data: meta data
+    :type meta_data: list
+    :param df_aux: auxiliary data based on which normalization is done
+    :type df_aux: pd.DataFrame
+    :param types: types of column to normalize, defaults to ("Float",)
+    :type types: tuple, optional
+    :return: normalized dataframe
+    :rtype: pd.DataFrame
+    """
     norm_cols = [col["name"] for col in meta_data if col["type"] in types]
 
     if len(norm_cols) != 0:
@@ -61,6 +86,21 @@ def select_columns(
     cols_to_select: list,
     meta_data_og: list,
 ) -> tuple:
+    """Select specified columns of dataset and drop the rest. 
+
+    :param df: dataset
+    :type df: pd.DataFrame
+    :param categorical_cols: names of categorical columns
+    :type categorical_cols: list
+    :param continuous_cols: names of continuous columns
+    :type continuous_cols: list
+    :param cols_to_select: columns to keep in dataframe. If "all" then all columns are kept.
+    :type cols_to_select: list
+    :param meta_data_og: metadata
+    :type meta_data_og: list
+    :return: data with selected columns, categorical column names, continuous column names, metadata concerning selected columns.
+    :rtype: tuple
+    """
     if cols_to_select[0] == "all":
         return df, categorical_cols, continuous_cols, meta_data_og
     df = df[cols_to_select]
@@ -76,9 +116,15 @@ def select_columns(
 
 
 def discretize_dataset(df: pd.DataFrame, columns: list) -> pd.DataFrame:
-    """
-    Convert the dataset to one where all categories in categorical columns are integers
+    """Convert the dataset to one where all categories in categorical columns are integers
     instead of class name strings
+
+    :param df: dataset to discretize
+    :type df: pd.DataFrame
+    :param columns: columns to discretize
+    :type columns: list
+    :return: discretized dataset
+    :rtype: pd.DataFrame
     """
     value_mapping = {}
     discrete_df = df.copy()
@@ -92,26 +138,16 @@ def discretize_dataset(df: pd.DataFrame, columns: list) -> pd.DataFrame:
 
 
 def get_target_record(df: pd.DataFrame, index: int) -> pd.DataFrame:
-    """
-    Given an index, return the 1-record dataframe corresponding to the index
+    """Given an index, return the 1-record dataframe corresponding to the index
+
+    :param df: dataset
+    :type df: pd.DataFrame
+    :param index: index of the record to return
+    :type index: int
+    :return: dataframe containing the record at the specified index of df
+    :rtype: pd.DataFrame
     """
     return df.loc[index:index]
-
-
-def merge_datasets(df_secant: pd.DataFrame) -> pd.DataFrame:
-    """
-    Will merge the list of dataset given in entry into a global dataset
-    """
-    # The list of datasets has to be non-empty
-    assert len(df_secant) > 0
-    # All datasets need to share the same set of columns
-    assert np.all(
-        np.array([df_secant[0].columns == df_.columns for df_ in df_secant])
-    )
-    df = pd.DataFrame(columns=df_secant[0].columns)
-    for df_ in df_secant:
-        df.concat([df, df_], ignore_index=True)
-    return df
 
 
 def load_data(

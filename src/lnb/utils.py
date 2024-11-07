@@ -7,12 +7,26 @@ import warnings
 import aiofiles
 
 
-async def save_metrics_to_file(file_path, data):
+async def save_metrics_to_file(file_path: str, data):
+    """Save metrics to file
+
+    :param file_path: file path
+    :type file_path: str
+    :param data: data to save
+    :type data: _type_
+    """
     async with aiofiles.open(file_path, "wb") as f:
         await f.write(pickle.dumps(data))
 
 
-def str2bool(s):
+def str2bool(s:str):
+    """convert string to bool. Used in parser.
+
+    :param s: "True" or "False". Raises argparse.ArgumentTypeError if value is neither.
+    :type s: str
+    :return: boolean
+    :rtype: bool
+    """
     # This is for boolean type in the parser
     if s == "True":
         return True
@@ -22,6 +36,13 @@ def str2bool(s):
 
 
 def str2list(s):
+    """Convert a string to a list. Used in parser.
+
+    :param s: string
+    :type s: str
+    :return: list
+    :rtype: list
+    """
     # Has to be a list of str
     sub = s[1 : len(s) - 1]
     l = []

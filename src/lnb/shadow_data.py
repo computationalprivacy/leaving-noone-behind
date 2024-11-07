@@ -32,47 +32,41 @@ def generate_dataset_parallel(
     train: bool,
 ):
     """
-    Train a synthetic data generator and generate an evaluation synthetic dataset.
-
-    Parameters
-    -----------
-    df_target : pandas.DataFrame
-        target dataset
-    meta_data: list
-        list containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators
-    target_record: pandas.DataFrame
-        dataframe containing only the target record
-    df_eval: pandas.DataFrame
-        evaluation pool to draw the reference record from
-    in_dataset: bool
-        If True, the target record is in the dataset used to train the synthetic data generator.
-        If False, it is replaced by a reference record randomly sampled from df_eval.
-    generator_name: str
-        name of the generator used, ex 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
-    n_synth: int
-        size of each synthetic dataset
-    seeds: list
-        list of seed values, lenght must be equal to n_datasets
-    idx: int
-        counter for number of generated synthetic datasets
-    synthetic datasets: list
-        list containing all generated synthetic datasets. This function generates a single synthetic dataset and places it in the list, selecting the position according to idx.
-    membership_labels: list
-        list containing membership labels for each synthetic dataset. If the target record is included in the training set, membership label is 1, otherwise it is 0.
-        Label at index idx in membership_labels corresponds to the synthetic dataset at index idx in synthetic_dataset.
-    epsilon: float
-        epsilon when training with differential privacy
-
-    Returns
-    --------
-    None
-
-    Description
-    -----------
-    This function trains one generator and generates a single dataset. The generator is trained on df_target,
-    either with the target record swapped out for a different record sampled from df_eval (in_dataset=False),
-    or on the full df_target containing the target record (in_dataset=True). The generated synthetic dataset and
+    This function trains one generator and generates a single dataset. The generator is trained on `df_target`,
+    either with the target record swapped out for a different record sampled from `df_eval` (in_dataset=False),
+    or on the full `df_target` containing the target record (in_dataset=True). The generated synthetic dataset and
     its membership label are placed in the corresponding lists.
+
+    :param df_target: Target dataset.
+    :type df_target: pandas.DataFrame
+    :param meta_data: List containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators.
+    :type meta_data: list
+    :param target_record: DataFrame containing only the target record.
+    :type target_record: pandas.DataFrame
+    :param df_eval: Evaluation pool to draw the reference record from.
+    :type df_eval: pandas.DataFrame
+    :param in_dataset: If True, the target record is in the dataset used to train the synthetic data generator.
+        If False, it is replaced by a reference record randomly sampled from `df_eval`.
+    :type in_dataset: bool
+    :param generator_name: Name of the generator used, e.g., 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
+    :type generator_name: str
+    :param n_synth: Size of each synthetic dataset.
+    :type n_synth: int
+    :param seeds: List of seed values; length must be equal to `n_datasets`.
+    :type seeds: list
+    :param idx: Counter for number of generated synthetic datasets.
+    :type idx: int
+    :param synthetic_datasets: List containing all generated synthetic datasets. This function generates a single synthetic dataset and places it in the list, selecting the position according to `idx`.
+    :type synthetic_datasets: list
+    :param membership_labels: List containing membership labels for each synthetic dataset. If the target record is included in the training set, the membership label is 1, otherwise it is 0. Label at index `idx` in `membership_labels` corresponds to the synthetic dataset at index `idx` in `synthetic_datasets`.
+    :type membership_labels: list
+    :param epsilon: Epsilon when training with differential privacy.
+    :type epsilon: float
+
+    :return: synthetic dataset,
+             bool indicating whether the synthetic data generator was trained on the target record,
+             bool indicating whether the synthetic dataset is used for MIA training or evaluation
+    :rtype: tuple
     """
     generator = get_generator(generator_name, epsilon=epsilon)
     if train:
@@ -132,39 +126,33 @@ def generate_datasets_parallel(
     train: bool,
 ):
     """
-    Creates and launch tasks to concurrently generate evaluation datasets for a given target record and target dataset
-
-    Parameters
-    -----------
-    df_target : pandas.DataFrame
-        target dataset
-    meta_data: list
-        list containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators
-    target_record: pandas.DataFrame
-        dataframe containing only the target record
-    df_eval: pandas.DataFrame
-        evaluation pool to draw the reference record from
-    generator_name: str
-        name of the generator used, ex 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
-    n_synth: int
-        size of each synthetic dataset
-    n_datasets: int
-        number of synthetic datasets to generate
-    seeds: list
-        list of seed values, lenght must be equal to n_datasets
-    epsilon: float
-        epsilon when training with differential privacy
-
-    Returns
-    --------
-    tuple
-    list containing all generated synthetic datasets, list containing membership labels for each generated synthetic dataset
-
-    Description
-    -----------
-    This is a function that allows evaluation datasets to be generated concurrently. This function is not meant to be called directly,
+    This function allows evaluation datasets to be generated concurrently. It is not meant to be called directly,
     but rather from `generate_evaluation_datasets`. Each launched task corresponds to a single synthetic data generator being trained
     and used to generate a single synthetic dataset. Exactly half of the synthetic data generators are trained on data including the target record.
+
+    :param df_target: Target dataset.
+    :type df_target: pandas.DataFrame
+    :param meta_data: List containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators.
+    :type meta_data: list
+    :param target_record: DataFrame containing only the target record.
+    :type target_record: pandas.DataFrame
+    :param df_eval: Evaluation pool to draw the reference record from.
+    :type df_eval: pandas.DataFrame
+    :param generator_name: Name of the generator used, e.g., 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
+    :type generator_name: str
+    :param n_synth: Size of each synthetic dataset.
+    :type n_synth: int
+    :param n_datasets: Number of synthetic datasets to generate.
+    :type n_datasets: int
+    :param seeds: List of seed values; length must be equal to `n_datasets`.
+    :type seeds: list
+    :param epsilon: Epsilon when training with differential privacy.
+    :type epsilon: float
+
+    :returns: A tuple containing:
+        - A list of all generated synthetic datasets.
+        - A list of membership labels for each generated synthetic dataset.
+    :rtype: tuple
     """
     shadow_datasets = [None] * n_datasets
     shadow_membership_labels = [None] * n_datasets
@@ -227,31 +215,27 @@ def generate_datasets(
     """
     Launch the pipeline to generate evaluation synthetic datasets.
 
-    Parameters
-    -----------
-    df_target : pandas.DataFrame
-        target dataset
-    meta_data: list
-        list containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators
-    target_record_id: int
-        index of the target record
-    df_eval: pandas.DataFrame
-        evaluation pool to draw the reference record from
-    generator_name: str
-        name of the generator used, ex 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
-    n_synth: int
-        size of each synthetic dataset
-    n_datasets: int
-        number of synthetic datasets to generate
-    seeds: list
-        list of seed values, lenght must be equal to n_datasets
-    epsilon: float
-        epsilon when training with differential privacy
+    :param df_target: Target dataset.
+    :type df_target: pandas.DataFrame
+    :param meta_data: List containing metadata concerning the data (feature types, ranges, etc.), necessary for training synthetic data generators.
+    :type meta_data: list
+    :param target_record_id: Index of the target record.
+    :type target_record_id: int
+    :param df_eval: Evaluation pool to draw the reference record from.
+    :type df_eval: pandas.DataFrame
+    :param generator_name: Name of the generator used, e.g., 'SYNTHPOP', 'BAYNET', etc. See reprosyn library for more details.
+    :type generator_name: str
+    :param n_synth: Size of each synthetic dataset.
+    :type n_synth: int
+    :param n_datasets: Number of synthetic datasets to generate.
+    :type n_datasets: int
+    :param seeds: List of seed values; length must be equal to `n_datasets`.
+    :type seeds: list
+    :param epsilon: Epsilon when training with differential privacy.
+    :type epsilon: float
 
-    Returns
-    --------
-    tuple
-    list containing all generated synthetic datasets, list containing membership labels for each generated synthetic dataset
+    :returns: A list containing tuples of (synthetic dataset, membership label)
+    :rtype: list
     """
     if seeds_train is None:
         seeds_train = list(range(n_datasets))
