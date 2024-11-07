@@ -1,7 +1,7 @@
-src
+lnb
 ===
 
 .. toctree::
    :maxdepth: 4
 
-   src
+   lnb

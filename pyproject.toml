@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lnb"
+requires-python = "~=3.9"
+authors = [
+    {name="natasa", email="natasakrco@gmail.com"}
+]
+maintainers = [
+    {name="natasa", email="natasakrco@gmail.com"}
+]
+description = " "
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Licence 2.0",
+    "Operating System :: OS Independent"
+]
+license = {file = "LICENSE"}
+dynamic = ["version", "dependencies", "optional-dependencies", "readme"]
+
+[tool.setuptools.dynamic]
+readme = {file = "README.md"}
+version = {file = "VERSION"}
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = { dev = {file = ["requirements-dev.txt"]} }
+
+[project.urls]
+Homepage = "https://cpg.doc.ic.ac.uk/"
+# Documentation = " "
+# Repository = " "
+# Changelog = "CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["lnb*"]
+namespaces = false
+
+[tool.ruff]
+line-length = 80
+include = ["*.py", "*.pyi", "*.ipynb"]
+output-format = "concise"
+show-fixes = true
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812", # Trailing comma missing
+    "ISC001", # Implicitly concatenated string literals on one line
+    "D104", # Missing docstring in public package
+    "D100", # Missing docstring in public module
+    "S101",
+    "D",
+]

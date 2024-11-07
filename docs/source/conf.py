@@ -1,8 +1,3 @@
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../src/'))
-sys.path.insert(0, os.path.abspath('../../src'))
-
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -12,15 +7,14 @@ sys.path.insert(0, os.path.abspath('../../src'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Leaving Noone Behind'
-copyright = '2024, Computational Privacy Group, Imperial College London'
-author = 'Computational Privacy Group, Imperial College London'
-release = '0.0.1'
+copyright = '2024, Computational Privacy Group'
+author = 'Computational Privacy Group'
+release = '0.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc']
-# extensions = []
+extensions = ["sphinx.ext.autodoc"]
 
 templates_path = ['_templates']
 exclude_patterns = []
