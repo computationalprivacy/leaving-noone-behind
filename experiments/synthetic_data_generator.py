@@ -10,20 +10,32 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from src.classifiers import (drop_zero_cols,
-                             fit_classifiers,
-                             scale_features)
-from src.data_prep import (discretize_dataset, get_target_record,
-                           normalize_cont_cols, read_data, read_metadata,
-                           select_columns)
-from src.feature_extractors import (apply_feature_extractor, fit_ohe,
-                                    get_feature_extractors)
+from src.classifiers import drop_zero_cols, fit_classifiers, scale_features
+from src.data_prep import (
+    discretize_dataset,
+    get_target_record,
+    normalize_cont_cols,
+    read_data,
+    read_metadata,
+    select_columns,
+)
+from src.feature_extractors import (
+    apply_feature_extractor,
+    fit_ohe,
+    get_feature_extractors,
+)
 from src.generators import get_generator
 from src.shadow_data import (
     create_shadow_training_data_membership,
-    create_shadow_training_data_membership_specific)
-from src.utils import (blockPrint, enablePrint, ignore_depreciation, str2bool,
-                       str2list)
+    create_shadow_training_data_membership_specific,
+)
+from src.utils import (
+    blockPrint,
+    enablePrint,
+    ignore_depreciation,
+    str2bool,
+    str2list,
+)
 
 # ---------- Data Setup ------------ #
 # Read the input of the user
@@ -78,10 +90,16 @@ parser.add_argument(
     help="epsilon value for DP synthetic data generator",
 )
 parser.add_argument(
-    "--n_aux", type=int, default=50000, help="number of records in the auxiliary data"
+    "--n_aux",
+    type=int,
+    default=50000,
+    help="number of records in the auxiliary data",
 )
 parser.add_argument(
-    "--n_test", type=int, default=25000, help="number of records in the test data"
+    "--n_test",
+    type=int,
+    default=25000,
+    help="number of records in the test data",
 )
 parser.add_argument(
     "--n_original",
@@ -170,7 +188,9 @@ def main():
     start_time = time.time()
     # read data
     print("Reading and preparing the data...")
-    meta_data_og, categorical_cols, continuous_cols = read_metadata(PATH_TO_METADATA)
+    meta_data_og, categorical_cols, continuous_cols = read_metadata(
+        PATH_TO_METADATA
+    )
     df = read_data(PATH_TO_DATA, categorical_cols, continuous_cols)
     df = discretize_dataset(df, categorical_cols)
     df = normalize_cont_cols(df, meta_data_og, df_aux=df)
@@ -184,7 +204,7 @@ def main():
     # split data into auxiliary and test set
     with open(PATH_TEST, "rb") as f:
         indexs = pickle.load(f)
-    
+
     # indices for D_target, with target record removed
     indices_target = indexs[0]
     indices_target.remove(TARGET_RECORD_ID)
@@ -193,7 +213,7 @@ def main():
     # indices for D_aux, used to train the MIA
     indices_train = indexs[1]
     df_aux = df.loc[indices_train]
-    
+
     # indices for D_eval, for average evaluation setup, with target record removed
     indices_eval = [ind for ind in df.index if ind not in indices_train]
     indices_eval.remove(TARGET_RECORD_ID)
@@ -212,9 +232,7 @@ def main():
     # Prepare shadow datasets to train MIA
     train_seeds = list(range(N_POS_TRAIN * 2))
 
-    (
-        datasets_train, labels_train, _
-    ) = create_shadow_training_data_membership(
+    (datasets_train, labels_train, _) = create_shadow_training_data_membership(
         df=df_aux,
         meta_data=meta_data,
         target_record=target_record,
@@ -248,7 +266,7 @@ def main():
         seeds=test_seeds,
         df_test=df_eval,
     )
-    
+
     enablePrint()
     print("Generating evaluation datasets (average setup)")
     blockPrint()
@@ -283,7 +301,9 @@ def main():
         )
     ]
 
-    feature_extractors, do_ohe = get_feature_extractors(QUERY_FEATURE_EXTRACTORS)
+    feature_extractors, do_ohe = get_feature_extractors(
+        QUERY_FEATURE_EXTRACTORS
+    )
     ignore_depreciation()
     print("Preparing training data...")
     X_train, y_train = apply_feature_extractor(
@@ -312,7 +332,7 @@ def main():
     )
 
     print("Preparing test data (average)...")
-    
+
     X_test_any, y_test_any = apply_feature_extractor(
         datasets=datasets_test_any.copy(),
         target_record=target_record,
@@ -339,18 +359,26 @@ def main():
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
 
-    SPEC_PREDS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_specific_preds.pkl"
-    SPEC_LABELS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_specific_labels.pkl"
+    SPEC_PREDS_OUTPUT_PATH = (
+        f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_specific_preds.pkl"
+    )
+    SPEC_LABELS_OUTPUT_PATH = (
+        f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_specific_labels.pkl"
+    )
 
     TRAIN_PREDS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_train_preds.pkl"
-    TRAIN_LABELS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_train_labels.pkl"
+    TRAIN_LABELS_OUTPUT_PATH = (
+        f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_train_labels.pkl"
+    )
 
-    for (i, model) in enumerate(trained_models):
+    for i, model in enumerate(trained_models):
         specific_test_preds = model.predict_proba(X_test_specific)
         train_preds = model.predict_proba(X_train)
 
         ANY_PREDS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_any_preds.pkl"
-        ANY_LABELS_OUTPUT_PATH = f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_any_labels.pkl"
+        ANY_LABELS_OUTPUT_PATH = (
+            f"{OUTPUT_DIR}/{TARGET_RECORD_ID}_any_labels.pkl"
+        )
         any_test_preds = model.predict_proba(X_test_any)
         with open(ANY_PREDS_OUTPUT_PATH, "wb") as f:
             pickle.dump(any_test_preds, f)

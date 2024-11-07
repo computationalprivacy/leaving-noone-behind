@@ -9,15 +9,18 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.base import ClassifierMixin
 
 C_LOGISTIC_REGRESSION = [1e-6, 1e-5, 1e-4, 0.001, 0.01, 0.1, 1, 10]
-RF_PARAMETERS = {'n_estimators': [100, 200, 20, 50, 100, 200, 500],
-             'max_depth': [3, 5, 10],
-            'min_samples_leaf': [3, 5]}
-MLP_PARAMETERS = {'hidden_layer_sizes':[(100,), (200,), (100, 100), (200, 200)],
-             'alpha': [1, 10, 100]}
+RF_PARAMETERS = {
+    "n_estimators": [100, 200, 20, 50, 100, 200, 500],
+    "max_depth": [3, 5, 10],
+    "min_samples_leaf": [3, 5],
+}
+MLP_PARAMETERS = {
+    "hidden_layer_sizes": [(100,), (200,), (100, 100), (200, 200)],
+    "alpha": [1, 10, 100],
+}
 
 
 def drop_zero_cols(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
-    
     """
     Drops columns from the input DataFrames where all column values are zero.
 
@@ -37,7 +40,8 @@ def drop_zero_cols(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
     X_test = X_test.drop(cols_to_drop, axis=1)
     return X_train, X_test
 
-def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame=None) -> tuple:
+
+def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame = None) -> tuple:
     """
     Scales the features in X_train by standardizing them.
     If X_test is provided, it scales the test set using the same mean and standard deviation as X_train.
@@ -58,14 +62,24 @@ def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame=None) -> tuple:
     all_stds = X_train_values.std(axis=0)
     all_stds[all_stds == 0] = 1
 
-    X_train = pd.DataFrame((X_train_values - all_means) / all_stds, columns=X_train.columns)
+    X_train = pd.DataFrame(
+        (X_train_values - all_means) / all_stds, columns=X_train.columns
+    )
     if X_test is None:
         return X_train, None
-    X_test = pd.DataFrame((X_test.values - all_means) / all_stds, columns=X_train.columns)
+    X_test = pd.DataFrame(
+        (X_test.values - all_means) / all_stds, columns=X_train.columns
+    )
     return X_train, X_test
 
-def validate_clf(clf: ClassifierMixin, X_train: pd.DataFrame, y_train: pd.DataFrame, X_test: pd.DataFrame,
-                 y_test: pd.DataFrame) -> tuple:
+
+def validate_clf(
+    clf: ClassifierMixin,
+    X_train: pd.DataFrame,
+    y_train: pd.DataFrame,
+    X_test: pd.DataFrame,
+    y_test: pd.DataFrame,
+) -> tuple:
     """
     Evaluates the classifier's performance on both the training and test datasets.
     Prints the accuracy and AUC (Area Under the Curve) for both training and test sets.
@@ -94,22 +108,25 @@ def validate_clf(clf: ClassifierMixin, X_train: pd.DataFrame, y_train: pd.DataFr
 
     y_train_pred = clf.predict(X_train)
     train_acc = accuracy_score(y_train, y_train_pred)
-    print('Training accuracy: ', train_acc)
+    print("Training accuracy: ", train_acc)
     train_auc = roc_auc_score(y_train, clf.predict_proba(X_train)[:, 1])
-    print('Training auc: ', train_auc)
+    print("Training auc: ", train_auc)
 
     y_test_pred = clf.predict(X_test)
     test_acc = accuracy_score(y_test, y_test_pred)
-    print('Test accuracy: ', test_acc)
+    print("Test accuracy: ", test_acc)
     try:
         test_auc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1])
-        print('Test auc: ', test_auc)
+        print("Test auc: ", test_auc)
     except:
-        print('Auc impossible, do you have only one class?')
+        print("Auc impossible, do you have only one class?")
         return train_acc, test_acc
     return train_acc, train_auc, test_acc, test_auc
 
-def train_LogisticRegression(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False) -> LogisticRegression:
+
+def train_LogisticRegression(
+    X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
+) -> LogisticRegression:
     """
     Trains a logistic regression model using either a fixed regularization parameter or cross-validation.
 
@@ -120,7 +137,7 @@ def train_LogisticRegression(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: b
     y_train: pd.DataFrame
         The target labels for the training set.
     cv: bool, optional
-        If True, performs cross-validation to find the best regularization parameter. 
+        If True, performs cross-validation to find the best regularization parameter.
         If False, trains the model using a fixed regularization parameter (default is False).
 
     Returns:
@@ -130,16 +147,19 @@ def train_LogisticRegression(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: b
     If `cv=True`, the function also prints the best regularization parameter (`C`) found during cross-validation.
     """
     if not cv:
-        clf = LogisticRegression(C = 0.001)
+        clf = LogisticRegression(C=0.001)
         clf.fit(X_train, y_train)
     else:
-        clf = LogisticRegressionCV(Cs = C_LOGISTIC_REGRESSION, n_jobs=1, cv=3)
+        clf = LogisticRegressionCV(Cs=C_LOGISTIC_REGRESSION, n_jobs=1, cv=3)
         clf.fit(X_train, y_train)
-        print('Best C: ', clf.C_)
+        print("Best C: ", clf.C_)
 
     return clf
 
-def train_RandomForest(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False) -> RandomForestClassifier:
+
+def train_RandomForest(
+    X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
+) -> RandomForestClassifier:
     """
     Trains a random forest classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
 
@@ -150,7 +170,7 @@ def train_RandomForest(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = 
     y_train: pd.DataFrame
         The target labels for the training set.
     cv: bool, optional
-        If True, performs cross-validation to find the best hyperparameters. 
+        If True, performs cross-validation to find the best hyperparameters.
                          If False, trains the model using fixed hyperparameters (default is False).
 
     Returns:
@@ -164,15 +184,18 @@ def train_RandomForest(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = 
         clf.fit(X_train, y_train)
     else:
         clf = RandomForestClassifier()
-        grid_search = GridSearchCV(clf, RF_PARAMETERS, n_jobs = 1, cv=3)
+        grid_search = GridSearchCV(clf, RF_PARAMETERS, n_jobs=1, cv=3)
         grid_search.fit(X_train, y_train)
-        print('Best params: ', grid_search.best_params_)
+        print("Best params: ", grid_search.best_params_)
         clf = RandomForestClassifier(**grid_search.best_params_)
         clf.fit(X_train, y_train)
 
     return clf
 
-def train_MLP(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False) -> MLPClassifier:
+
+def train_MLP(
+    X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False
+) -> MLPClassifier:
     """
     Trains a Multi-layer Perceptron (MLP) classifier using either fixed hyperparameters or cross-validation for hyperparameter tuning.
 
@@ -183,7 +206,7 @@ def train_MLP(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False) ->
     y_train: pd.DataFrame
         The target labels for the training set.
     cv: bool, optional
-        If True, performs cross-validation to find the best hyperparameters. 
+        If True, performs cross-validation to find the best hyperparameters.
         If False, trains the model using fixed hyperparameters (default is False).
 
     Returns:
@@ -198,15 +221,18 @@ def train_MLP(X_train: pd.DataFrame, y_train: pd.DataFrame, cv: bool = False) ->
         clf.fit(X_train, y_train)
     else:
         clf = MLPClassifier()
-        grid_search = GridSearchCV(clf, MLP_PARAMETERS, n_jobs = 1, cv=3)
+        grid_search = GridSearchCV(clf, MLP_PARAMETERS, n_jobs=1, cv=3)
         grid_search.fit(X_train, y_train)
-        print('Best params: ', grid_search.best_params_)
+        print("Best params: ", grid_search.best_params_)
         clf = MLPClassifier(**grid_search.best_params_)
         clf.fit(X_train, y_train)
 
     return clf
 
-def fit_classifier(X_train: pd.DataFrame, y_train: pd.DataFrame, model: str, cv=False):
+
+def fit_classifier(
+    X_train: pd.DataFrame, y_train: pd.DataFrame, model: str, cv=False
+):
     """
     Trains a classifier based on the specified model type using the provided training data.
 
@@ -226,36 +252,46 @@ def fit_classifier(X_train: pd.DataFrame, y_train: pd.DataFrame, model: str, cv=
     --------
     object: A trained classifier object based on the specified model.
     """
-    
-    if model=='logistic_regression':
-        clf=train_LogisticRegression(X_train, y_train, cv)
-        
-    elif model=='random_forest':
+
+    if model == "logistic_regression":
+        clf = train_LogisticRegression(X_train, y_train, cv)
+
+    elif model == "random_forest":
         clf = train_RandomForest(X_train, y_train, cv)
-    elif model == 'mlp':
+    elif model == "mlp":
         clf = train_MLP(X_train, y_train, cv)
 
-    return clf            
+    return clf
 
-def fit_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, cv=False):
+
+def fit_classifiers(
+    X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, cv=False
+):
     trained_models = []
-    
+
     for model in models:
-        print(f'Model: {model}')
-        if model=='logistic_regression':
-            clf=train_LogisticRegression(X_train, y_train, cv)
-            
-        elif model=='random_forest':
+        print(f"Model: {model}")
+        if model == "logistic_regression":
+            clf = train_LogisticRegression(X_train, y_train, cv)
+
+        elif model == "random_forest":
             clf = train_RandomForest(X_train, y_train, cv)
-        elif model == 'mlp':
+        elif model == "mlp":
             clf = train_MLP(X_train, y_train, cv)
-            
+
         trained_models.append(clf)
-        
+
     return trained_models
 
-def fit_validate_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, X_test: pd.DataFrame,
-                             y_test: pd.DataFrame, models: list, cv: bool = False) -> tuple:
+
+def fit_validate_classifiers(
+    X_train: pd.DataFrame,
+    y_train: pd.DataFrame,
+    X_test: pd.DataFrame,
+    y_test: pd.DataFrame,
+    models: list,
+    cv: bool = False,
+) -> tuple:
     """
     Trains and validates multiple classifiers on the provided training and test sets.
 
@@ -283,19 +319,19 @@ def fit_validate_classifiers(X_train: pd.DataFrame, y_train: pd.DataFrame, X_tes
     """
     trained_models, all_results = [], []
     for model in models:
-        print('Model: ', model)
-        if model == 'logistic_regression':
+        print("Model: ", model)
+        if model == "logistic_regression":
             clf = train_LogisticRegression(X_train, y_train, cv)
-            results = validate_clf(clf, X_train, y_train, X_test,y_test)
-        elif model == 'random_forest':
+            results = validate_clf(clf, X_train, y_train, X_test, y_test)
+        elif model == "random_forest":
             clf = train_RandomForest(X_train, y_train, cv)
-            results = validate_clf(clf, X_train, y_train, X_test,y_test)
-        elif model == 'mlp':
+            results = validate_clf(clf, X_train, y_train, X_test, y_test)
+        elif model == "mlp":
             clf = train_MLP(X_train, y_train, cv)
-            results = validate_clf(clf, X_train, y_train, X_test,y_test)
+            results = validate_clf(clf, X_train, y_train, X_test, y_test)
         else:
-            print('Not a valid model.')
-        print('---')
+            print("Not a valid model.")
+        print("---")
         trained_models.append(clf)
         all_results.append(results)
 
