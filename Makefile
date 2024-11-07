@@ -1,6 +1,7 @@
 MANAGER=conda
 LIBRARY_NAME=lnb
 PYTHON_VERSION=3.9
+PYTHON_FILES=src/lnb experiments
 
 RUN_CMD=$(MANAGER) run -n $(LIBRARY_NAME)
 
@@ -28,3 +29,11 @@ install-pkg:
 install-kernel:
 	$(RUN_CMD) pip install ipykernel
 	$(RUN_CMD) python -m ipykernel install --user --name $(LIBRARY_NAME) --display-name "$(LIBRARY_NAME): Python($(LIBRARY_NAME))"
+
+.PHONY: py-format
+py-format:
+	ruff format $(PYTHON_FILES)
+
+.PHONY: py-lint
+py-lint:
+	ruff check --fix $(PYTHON_FILES)

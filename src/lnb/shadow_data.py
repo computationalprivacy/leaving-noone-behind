@@ -1,10 +1,9 @@
 ### Add pipeline to create data for shadow modeling
+import concurrent.futures
 import pickle as pickle
 from random import sample
 
 import pandas as pd
-import concurrent.futures
-
 
 from lnb.generators import get_generator
 from lnb.utils import blockPrint, enablePrint

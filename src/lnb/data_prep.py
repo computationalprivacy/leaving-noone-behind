@@ -1,6 +1,5 @@
 import json
 import pickle
-from random import sample
 
 import numpy as np
 import pandas as pd
@@ -10,7 +9,7 @@ def read_metadata(metadata_path: str) -> tuple:
     """
     Read metadata from a json file (is necessary for the reprosyn generators)
     """
-    with open(metadata_path, "r", encoding="utf-8") as f:
+    with open(metadata_path, encoding="utf-8") as f:
         meta_data = json.load(f)
 
     categorical_cols = [
@@ -64,21 +63,16 @@ def select_columns(
 ) -> tuple:
     if cols_to_select[0] == "all":
         return df, categorical_cols, continuous_cols, meta_data_og
-    else:
-        df = df[cols_to_select]
-        categorical_cols = [
-            col for col in categorical_cols if col in cols_to_select
-        ]
-        continuous_cols = [
-            col for col in continuous_cols if col in cols_to_select
-        ]
-        meta_data_columns = [col["name"] for col in meta_data_og]
-        meta_data_selected = []
-        for col in cols_to_select:
-            meta_data_selected.append(
-                meta_data_og[meta_data_columns.index(col)]
-            )
-        return df, categorical_cols, continuous_cols, meta_data_selected
+    df = df[cols_to_select]
+    categorical_cols = [
+        col for col in categorical_cols if col in cols_to_select
+    ]
+    continuous_cols = [col for col in continuous_cols if col in cols_to_select]
+    meta_data_columns = [col["name"] for col in meta_data_og]
+    meta_data_selected = []
+    for col in cols_to_select:
+        meta_data_selected.append(meta_data_og[meta_data_columns.index(col)])
+    return df, categorical_cols, continuous_cols, meta_data_selected
 
 
 def discretize_dataset(df: pd.DataFrame, columns: list) -> pd.DataFrame:

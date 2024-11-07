@@ -1,17 +1,13 @@
 ### add feature extractors
-import asyncio
+import concurrent.futures
 import itertools
 from copy import deepcopy
-import logging
 
 import numpy as np
+import optimqbs as qbs  # optimized_qbs import qbs
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import OneHotEncoder
-from tqdm import tqdm
-import concurrent.futures
-
-import optimqbs as qbs  # optimized_qbs import qbs
 
 ######### Concurrent functions #########
 
@@ -293,23 +289,22 @@ def extract_one_feature(
         features, col_names = query_extractor(
             dataset_int, target_record_int, queries
         )
+    elif do_ohe:
+        features, col_names = feature_extractor(
+            data_ohe,
+            ohe_columns,
+            ohe_column_names,
+            continuous_cols,
+            target_ohe,
+        )
     else:
-        if do_ohe:
-            features, col_names = feature_extractor(
-                data_ohe,
-                ohe_columns,
-                ohe_column_names,
-                continuous_cols,
-                target_ohe,
-            )
-        else:
-            features, col_names = feature_extractor(
-                dataset,
-                ohe_columns,
-                ohe_column_names,
-                continuous_cols,
-                target_record,
-            )
+        features, col_names = feature_extractor(
+            dataset,
+            ohe_columns,
+            ohe_column_names,
+            continuous_cols,
+            target_record,
+        )
     return features, col_names
 
 
@@ -644,23 +639,22 @@ def apply_feature_extractor_sequential(
                 features, col_names = query_extractor(
                     dataset_int, target_record_int, queries
                 )
+            elif do_ohe[i]:
+                features, col_names = feature_extractor(
+                    data_ohe,
+                    ohe_columns,
+                    ohe_column_names,
+                    continuous_cols,
+                    target_ohe,
+                )
             else:
-                if do_ohe[i]:
-                    features, col_names = feature_extractor(
-                        data_ohe,
-                        ohe_columns,
-                        ohe_column_names,
-                        continuous_cols,
-                        target_ohe,
-                    )
-                else:
-                    features, col_names = feature_extractor(
-                        dataset,
-                        ohe_columns,
-                        ohe_column_names,
-                        continuous_cols,
-                        target_record,
-                    )
+                features, col_names = feature_extractor(
+                    dataset,
+                    ohe_columns,
+                    ohe_column_names,
+                    continuous_cols,
+                    target_record,
+                )
             all_feature_one_ds += features
             all_feature_names += col_names
         all_features.append(all_feature_one_ds)

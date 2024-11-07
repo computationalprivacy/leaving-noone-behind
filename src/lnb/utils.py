@@ -1,9 +1,10 @@
 import argparse
 import os
+import pickle
 import sys
 import warnings
+
 import aiofiles
-import pickle
 
 
 async def save_metrics_to_file(file_path, data):
@@ -15,10 +16,9 @@ def str2bool(s):
     # This is for boolean type in the parser
     if s == "True":
         return True
-    elif s == "False":
+    if s == "False":
         return False
-    else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
+    raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
 def str2list(s):
@@ -30,7 +30,7 @@ def str2list(s):
     for i, c in enumerate(sub):
         if c == ",":
             continue
-        elif c == "'":
+        if c == "'":
             if first:
                 tamp = i + 1
                 first = False

@@ -136,15 +136,14 @@ class indhist(Generator):
 def get_generator(name_generator: str, epsilon: float):
     if name_generator == "identity":
         return identity()
-    elif name_generator == "BAYNET":
+    if name_generator == "BAYNET":
         return baynet()
-    elif name_generator == "privbayes":
+    if name_generator == "privbayes":
         return privbayes(epsilon)
-    elif name_generator == "CTGAN":
+    if name_generator == "CTGAN":
         return ctgan()
-    elif name_generator == "SYNTHPOP":
+    if name_generator == "SYNTHPOP":
         return synthpop()
-    elif name_generator == "INDHIST":
+    if name_generator == "INDHIST":
         return indhist()
-    else:
-        print("Not a valid generator.")
+    print("Not a valid generator.")

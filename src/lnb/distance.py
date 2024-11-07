@@ -2,7 +2,6 @@ import asyncio
 
 import numpy as np
 import pandas as pd
-from scipy.spatial import distance
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 

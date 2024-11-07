@@ -1,12 +1,11 @@
 ### add classifiers
 import pandas as pd
+from sklearn.base import ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPClassifier
-from sklearn.base import ClassifierMixin
 
 C_LOGISTIC_REGRESSION = [1e-6, 1e-5, 1e-4, 0.001, 0.01, 0.1, 1, 10]
 RF_PARAMETERS = {
@@ -244,9 +243,9 @@ def fit_classifier(
         The target labels for the training set.
     model: str
         The type of classifier to train. Supported values are: 'logistic_regression', 'random_forest', 'mlp'.
-    cv: bool, optional)
+    cv: bool, optional
         If True, performs cross-validation during model training to tune hyperparameters.
-        If False, trains the model using fixed hyperparameters (default is False).
+        If False, trains the model using fixed hyperparameters (default is False). This is a modification
 
     Returns:
     --------
@@ -267,6 +266,19 @@ def fit_classifier(
 def fit_classifiers(
     X_train: pd.DataFrame, y_train: pd.DataFrame, models: list, cv=False
 ):
+    """_summary_
+
+    :param X_train: _description_
+    :type X_train: pd.DataFrame
+    :param y_train: _description_
+    :type y_train: pd.DataFrame
+    :param models: _description_
+    :type models: list
+    :param cv: _description_, defaults to False
+    :type cv: bool, optional
+    :return: _description_
+    :rtype: _type_
+    """
     trained_models = []
 
     for model in models:

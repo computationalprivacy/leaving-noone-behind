@@ -36,3 +36,21 @@ Homepage = "https://cpg.doc.ic.ac.uk/"
 where = ["src"]
 include = ["lnb*"]
 namespaces = false
+
+[tool.ruff]
+line-length = 80
+include = ["*.py", "*.pyi", "*.ipynb"]
+output-format = "concise"
+show-fixes = true
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812", # Trailing comma missing
+    "ISC001", # Implicitly concatenated string literals on one line
+    "D104", # Missing docstring in public package
+    "D100", # Missing docstring in public module
+    "S101",
+    "D",
+]
