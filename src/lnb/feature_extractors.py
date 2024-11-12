@@ -7,7 +7,7 @@ import itertools
 from copy import deepcopy
 
 import numpy as np
-import optimqbs as qbs  # 
+from optimqbs import qbs  # 
 
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
