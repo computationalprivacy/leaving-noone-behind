@@ -12,7 +12,8 @@ create-env:
 .PHONY: install-qbs
 install-qbs:
 	git clone -b main https://github.com/computationalprivacy/querysnout.git
-	cd querysnout/src/optimized_qbs && $(RUN_CMD) python setup.py install
+	cd querysnout/src/optimized_qbs && $(RUN_CMD) pip install .
+	rm -rf querysnout
 
 .PHONY: install-pkg-dev
 install-pkg-dev:
@@ -22,6 +23,7 @@ install-pkg-dev:
 .PHONY: install-pkg
 install-pkg:
 	$(RUN_CMD) pip install .
+	$(MAKE) install-qbs
 
 .PHONY: install-kernel
 install-kernel:

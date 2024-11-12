@@ -1,11 +1,14 @@
+import sys
+sys.path.append('../')
+
 ### add feature extractors
 import concurrent.futures
 import itertools
 from copy import deepcopy
 
 import numpy as np
-# import optimqbs as qbs  # 
-import optimized_qbs as qbs
+import optimqbs as qbs  # 
+
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import OneHotEncoder
