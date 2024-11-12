@@ -1,9 +1,6 @@
 lnb package
 ===========
 
-Submodules
-----------
-
 lnb.classifiers module
 ----------------------
 
