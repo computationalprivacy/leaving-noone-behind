@@ -8,6 +8,8 @@ This library is based on work presented in the following papers:
 
 This repository also relies on [QuerySnout](https://github.com/computationalprivacy/querysnout), the repository containing the code for the paper ["QuerySnout: Automating the Discovery of Attribute Inference Attacks against Query-Based Systems"](https://dl.acm.org/doi/abs/10.1145/3548606.3560581) by Ana-Maria Cretu, Florimond Houssiau, Antoine Cully and Yves-Alexandre de Montjoye, published at ACM CCS 2022. We have included the necessary files, slightly modified for easier installation, in this repository.
 
+Find the documentation for our repository [here](https://leaving-noone-behind-privacy-risk-of-synthetic-data.readthedocs.io/en/latest/)!
+
 ## Installing the environment
 
 To replicate our conda environment, we have provided a Makefile with predefined shortcuts for easy installation. To install all necessary packages and a conda environment and kernel, simply run the following command in your terminal:
