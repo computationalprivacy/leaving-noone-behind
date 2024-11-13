@@ -6,27 +6,14 @@ This library is based on work presented in the following papers:
 1. [Lost in the Averages: A New Specific Setup to Evaluate Membership Inference Attacks Against Machine Learning Models](https://arxiv.org/abs/2405.15423)
 2. [Achilles' Heels: Vulnerable Record Identification in Synthetic Data Publishing](https://arxiv.org/abs/2306.10308)
 
+This repository also relies on [QuerySnout](https://github.com/computationalprivacy/querysnout), the repository containing the code for the paper ["QuerySnout: Automating the Discovery of Attribute Inference Attacks against Query-Based Systems"](https://dl.acm.org/doi/abs/10.1145/3548606.3560581) by Ana-Maria Cretu, Florimond Houssiau, Antoine Cully and Yves-Alexandre de Montjoye, published at ACM CCS 2022. We have included the necessary files, slightly modified for easier installation, in this repository.
+
 ## Installing the environment
 
-To replicate our conda environment, run the following commands:
+To replicate our conda environment, we have provided a Makefile with predefined shortcuts for easy installation. To install all necessary packages and a conda environment and kernel, simply run the following command in your terminal:
 
-1. Create and activate the end:
-    - `conda create --name mia_env python=3.9`
-    - `conda activate mia_env`
-
-2. Clone and install the requirements from the [reprosyn](https://github.com/alan-turing-institute/reprosyn) repository:
-    - `git clone https://github.com/alan-turing-institute/reprosyn`
-    - `cd reprosyn`
-    - `curl -sSL https://install.python-poetry.org | python3 -`
-    - `poetry install -E ektelo`. To install poetry on your system we refer to their [installation instructions](https://python-poetry.org/docs/#installing-with-the-official-installer)
-
-3. Install the C-based optimized QBS:
-    - `cd src/optimized_qbs/`
-    - `python setup.py install` (check whether/how to include this or just link to it and have ppl )
-
-4. Install remaining dependencies:
-    - `pip install -r requirements.txt`
+`make setup-env`
 
 ## Getting started
 
-See our [intro notebook](https://gitlab.doc.ic.ac.uk/cpg/research/leaving-noone-behind/-/blob/master/example.ipynb?ref_type=heads) to understand how to get started using our library!
+See our [intro notebook](https://github.com/computationalprivacy/leaving-noone-behind/blob/master/notebooks/example.ipynb) to understand how to get started using our library!
