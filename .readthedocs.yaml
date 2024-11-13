@@ -35,8 +35,8 @@ python:
   - requirements: requirements.txt
   # - requirements: requirements-dev.txt
   - path: querysnout/src/optimized_qbs  # Install the package in this folder
-  - pip: 
-      - git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
+  # - pip: 
+  #     - git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
     # - requirements: 
     #   - requirements.txt
     #   - requirements-dev.txt
