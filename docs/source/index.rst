@@ -9,8 +9,6 @@ Leaving Noone Behind documentation
 Welcome to the Leaving Noone Behind documentation!
 Our package - lnb - provides an easy-to-use method for estimating the privacy risk of synthetic data using membership inference attacks.
 
-`opalalgorithms <https://github.com/shubhamjain0594/opalalgorithms>`_
-
 Find our `installation instructions <https://github.com/computationalprivacy/leaving-noone-behind/blob/master/README.md>`_ and an `example notebook <https://github.com/computationalprivacy/leaving-noone-behind/blob/master/notebooks/example.ipynb>`_ in our `repo <https://github.com/computationalprivacy/leaving-noone-behind/tree/master>`_ !
 
 
