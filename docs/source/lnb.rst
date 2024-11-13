@@ -1,7 +1,7 @@
 lnb package
 ===========
 
-lnb.classifiers module
+classifiers
 ----------------------
 
 .. automodule:: lnb.classifiers
@@ -9,7 +9,7 @@ lnb.classifiers module
    :undoc-members:
    :show-inheritance:
 
-lnb.data\_prep module
+data\_prep
 ---------------------
 
 .. automodule:: lnb.data_prep
@@ -17,7 +17,7 @@ lnb.data\_prep module
    :undoc-members:
    :show-inheritance:
 
-lnb.distance module
+distance
 -------------------
 
 .. automodule:: lnb.distance
@@ -25,7 +25,7 @@ lnb.distance module
    :undoc-members:
    :show-inheritance:
 
-lnb.feature\_extractors module
+feature\_extractors
 ------------------------------
 
 .. automodule:: lnb.feature_extractors
@@ -33,7 +33,7 @@ lnb.feature\_extractors module
    :undoc-members:
    :show-inheritance:
 
-lnb.generators module
+generators
 ---------------------
 
 .. automodule:: lnb.generators
@@ -41,7 +41,7 @@ lnb.generators module
    :undoc-members:
    :show-inheritance:
 
-lnb.mia module
+mia
 --------------
 
 .. automodule:: lnb.mia
@@ -49,7 +49,7 @@ lnb.mia module
    :undoc-members:
    :show-inheritance:
 
-lnb.plots module
+plots
 ----------------
 
 .. automodule:: lnb.plots
@@ -57,7 +57,7 @@ lnb.plots module
    :undoc-members:
    :show-inheritance:
 
-lnb.shadow\_data module
+shadow
 -----------------------
 
 .. automodule:: lnb.shadow_data
@@ -65,7 +65,7 @@ lnb.shadow\_data module
    :undoc-members:
    :show-inheritance:
 
-lnb.utils module
+utils
 ----------------
 
 .. automodule:: lnb.utils
