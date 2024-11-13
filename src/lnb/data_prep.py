@@ -6,7 +6,8 @@ import pandas as pd
 
 
 def read_metadata(metadata_path: str) -> tuple:
-    """Read metadata from a json file (is necessary for the reprosyn generators)
+    """
+    Read metadata from a json file (is necessary for the reprosyn generators)
 
     :param metadata_path: path to metadata
     :type metadata_path: str
@@ -28,7 +29,8 @@ def read_metadata(metadata_path: str) -> tuple:
 def read_data(
     data_path: str, categorical_cols: list, continuous_cols: list
 ) -> pd.DataFrame:
-    """Read given file_path (csv) and return a pd dataframe.
+    """
+    Read given file_path (csv) and return a pd dataframe.
     If all categorical, make sure data all column values are strings
 
     :param data_path: path to data

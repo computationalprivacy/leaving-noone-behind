@@ -11,8 +11,7 @@ from lnb.feature_extractors import apply_ohe, fit_ohe
 def top_n_vulnerable_records(distances: dict, n: int) -> list:
     """Return the ids of the top n vulnerable records
 
-    :param distances: dictionary where key is record id and value is the corresponding record's risk score
-    (in this case the mean distance to it's 5 closest neighbors)
+    :param distances: dictionary where key is record id and value is the corresponding record's risk score (in this case the mean distance to it's 5 closest neighbors)
     :type distances: dict
     :param n: number of most vulnerable records to find
     :type n: int
@@ -31,8 +30,7 @@ def top_n_vulnerable_records(distances: dict, n: int) -> list:
 def top_n_vulnerable_dists(distances: dict, n: int) -> list:
     """Return the risk scores of the top n vulnerable records
 
-    :param distances: dictionary where key is record id and value is the corresponding record's risk score
-    (in this case the mean distance to it's 5 closest neighbors)
+    :param distances: dictionary where key is record id and value is the corresponding record's risk score (in this case the mean distance to it's 5 closest neighbors)
     :type distances: dict
     :param n: number of most vulnerable records to find
     :type n: int

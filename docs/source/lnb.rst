@@ -72,11 +72,3 @@ lnb.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: lnb
-   :members:
-   :undoc-members:
-   :show-inheritance:
