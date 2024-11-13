@@ -36,8 +36,7 @@ python:
       path: .[dev]
     - method: pip
       path: querysnout/src/optimized_qbs
-    - method: pip
-      path: [mbi_rqs]
+    - requirements: requirements-mbi.txt
     # - method: pip
     #   pip:
     #     - git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
