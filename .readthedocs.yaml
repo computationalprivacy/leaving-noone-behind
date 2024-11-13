@@ -32,11 +32,17 @@ sphinx:
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 python:
   install:
-    - requirements: 
-      - requirements.txt
-      - requirements-dev.txt
-    - path: querysnout/src/optimized_qbs
-    - pip:
-      - git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
+  script:
+    - pip install -r requirements.txt
+    - pip install -r requirements-dev.txt
+    - pip install git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
+    - cd querysnout/src/optimized_qbs
+    - pip install .
+    # - requirements: 
+    #   - requirements.txt
+    #   - requirements-dev.txt
+    # - path: querysnout/src/optimized_qbs
+    # - pip:
+      # - git+https://github.com/ryan112358/private-pgm.git@4152cc591f30560ce994870318ee4801b016bf94
     # - method: pip
     #   path: .[dev]
